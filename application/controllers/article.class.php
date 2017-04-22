@@ -36,6 +36,19 @@ class article extends Controller{
         $this->assign("add",true);
         $this->view("admin/article.html");
     }
+    public function deleteAll(){
+        if(isset($_POST['send'])){
+            $multiId=implode(",", $_POST['selectAll']);
+            //echo $multiId;
+            if($this->model->delete("article","where id in (".$multiId.")")){
+                $this->redirect("多删成功",$_SERVER['HTTP_REFERER']);
+            }else{
+                $this->redirect("多删失败",$_SERVER['HTTP_REFERER'],0);
+            }
+        }
+        $this->assign("admin",true);
+        $this->view("admin/article.html");
+    }
     private function showNav(){
         $frontNav=$this->model->getAll("nav","where pid=0 and state=1 order by sort asc limit 9");
         //$this->dump($frontNav);

@@ -1,12 +1,14 @@
 $(function(){
+	/////
 	//alert(sessionStorage.getItem("id"));
 	$("#uid").val(sessionStorage.getItem("id"));
+	//alert($(".choice .item").length);
 	///在右边显示选择器的序号
-	for(var i=1;i<=$(".choice a").length;i++){
+	for(var i=1;i<=$(".choice .item").length;i++){
 		$(".jump .content1").append("<li>"+i+"</li>");
 	}
 	///在右边显示判断器的序号
-	for(var j=1;j<=$(".judge a").length;j++){
+	for(var j=1;j<=$(".judge .item").length;j++){
 		$(".jump .content2").append("<li>"+j+"</li>");
 	}
 	//////点击选择题序号，滑动到对象的题目///////////////////
@@ -59,10 +61,11 @@ $(function(){
 	var mydate=new Date();
 	var starttime=mydate.getTime();
 	var gotime=1;
-	setInterval(function(){
+	var tt=setInterval(function(){
 		var s=new Date();
 		var d=s.getTime()-starttime;
-		var f=50*60*1000;
+		//50分钟
+		var f=$("#totalTime").val()*60*1000;
 		var f1='',f2='';
 		f=parseInt((f-d)/1000); // 剩余时间
 		f1=Math.floor(f/60);
@@ -71,30 +74,41 @@ $(function(){
 		if (f2<10) f2='0' + f2;
 		//alert(f1);
 		$(".countdown span").html(f1+":"+f2);
+		d=parseInt(d/1000);
+		u1=Math.floor(d/60);
+		u2=Math.floor(d%60);
+		if (u1<10) u1='0' + u1;
+		if (u2<10) u2='0' + u2;
+		$("#usedTime").val(u1+":"+u2);
 		if (f==300){
-			alert('离考试结束还有 5 分钟，请抓紧时间！');
+			$("#warning .modal-body").html("离考试结束还有5分钟，请抓紧时间!");
+			$("#warning").modal("show");
+			setTimeout(function(){
+				$("#warning").modal("hide");
+			},3000);
+		}
+		if(f==35){
+			//clearInterval(tt);
+			//alert("考试时间到,系统自动交卷！");
+			$("#warning .modal-body").html("请在30秒内提交，否则自动交卷！");
+			$("#warning").modal("show");
+			setTimeout(function(){
+				$("#warning").modal("hide");
+			},3000);
+			//alert($("#choice[324]d").val());
+			//$("#exam").submit();
+			//$("#submitBtn")[0].click();
 		}
 		if(f==0){
-			alert("考试时间到,系统自动交卷！");
-			$("#exam").submit();
+			clearInterval(tt);
+			$(".countdown span").html("考试结束");
+			//$("#submitBtn").addClass("disabled");
+			//$("#submitBtn").attr("disabled",true);
+			$("#submitBtn")[0].click();
 		}
 	},1000);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	///////////
+	$("#submitBtn").click(function(){
+		location.replace(location.href);
+	});
 });

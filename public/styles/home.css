@@ -688,43 +688,7 @@ ul{
 	margin-right: 8px;
 	color: #0454A7;
 }
-.share{
-	padding:20px 0;
-	border-top:1px dashed #eee;
-	border-bottom:1px dashed #eee;
-}
-.comment dl dd{
-	padding:5px 15px;
-	border-left:1px solid #eee;
-	border-right:1px solid #eee;
-	background:lightyellow;
-	border-bottom:1px solid #eee;
-}
-.comment dl dd input{
-	margin-top:3px;
-	float:right;
-}
-#showComment{
-	background:none;
-	border-bottom:1px solid #eee;
-}
-#showComment table{
-	margin-top:5px;
-	border-bottom:1px dashed #ddd;
-}
-#showComment .icon{
-	width:50px;
-	height:50px;
-	text-align:center;
-	line-height:50px;
-}
-#showComment .icon img{
-	width:50px;
-	height:50px;
-}
-#showComment table:hover{
-	background:#ddd;
-}
+
 .footer{
 	font-size: 12px;
 	color: gray;

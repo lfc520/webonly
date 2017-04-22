@@ -114,7 +114,7 @@
 </div>
 <div class='row'>
     <div class="col-md-12 main">
-        <form action="" method="post">
+        <form action="/article/deleteAll" method="post">
             <table class="table table-bordered table-hover table-striped">
                 <tr>
                     <td>名称</td>
@@ -146,13 +146,13 @@
                           /
                         <a href="/article/delete/id/{$value->id}">删除</a>
                     </td>
-                    <td><input type="checkbox" name="getAll[]" value="{$value->id}"></td>
+                    <td><input type="checkbox" value="{$value->id}" name="selectAll[]"></td>
                 </tr>
                 {/foreach}
                 <tr>
                     <td colspan="12" class="text-right">
                         <!--<a href="?a=ad&action=add" class="btn btn-primary">添加广告</a>-->
-                        <input type="submit"  name="delete" class="btn btn-danger" value="清除选中" >
+                        <input type="submit" value="全删" class="btn btn-success pull-right" name="send">
                     </td>
                 </tr>
                 {else}

@@ -50,7 +50,6 @@ class message extends Controller{
     public function update($data=array()){
         //Tools::dump($_POST);
         if($_POST['send']){
-            $this->model->id=$_GET['id'];
             if($_POST['range']==1){
                 $uid=0;
             }else{
@@ -62,11 +61,12 @@ class message extends Controller{
                 'title'=>$_POST['title'],
                 'content'=>$_POST['content']
             );
-            $result=$this->model->updateMsg($array);
+            $result=$this->model->update("message", $array,"where id=".$data['id']);
+            
             if($result){
-                Tools::Redirect("修改成功", "?a=message&action=show");
+                $this->redirect("修改成功", "/message/show");
             }else{
-                Tools::Redirect("修改成功", $_SERVER['HTTP_REFERER']);
+                $this->redirect("修改失败", $_SERVER['HTTP_REFERER'],0);
             }
         }
         if($data['id']){

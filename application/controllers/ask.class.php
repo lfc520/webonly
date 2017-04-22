@@ -16,7 +16,14 @@ class ask extends Controller{
     public function detail($data=array()){
         if($data['id']){
             $oneAsk=$this->model->getOne("ask","where id=".$data['id']);
-            //$this->dump($oneAsk[0]);
+            $responds=$this->model->getAll("ask","where pid=".$data['id']." order by id desc ");
+            foreach ($responds as $key=>$value){
+                $oneUser=$this->model->getOne("user","where id=".$value->uid);
+                $value->uid=$oneUser[0]->username;
+                $value->icon=$oneUser[0]->icon;
+            }
+            //$this->dump($responds);
+            $this->assign("responds",$responds);
             $this->assign("oneAsk",$oneAsk[0]);
         }
         $this->assign('detail',true);
@@ -46,7 +53,7 @@ class ask extends Controller{
     }
     public function respond($data=array()){
         if(isset($_POST['send'])){
-            $this->dump($_POST);
+            //$this->dump($_POST);
             $array=array(
              'cid'=>$_POST['cid'],
              'content'=>$_POST['respond'],

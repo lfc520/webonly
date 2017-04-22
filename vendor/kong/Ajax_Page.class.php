@@ -1,75 +1,123 @@
 <?php
 /**
- * 分页 第七版:Ajax分页类;
- * 1.地址栏传page
- * 2.$page->limit代表的是limit 0,5,
- * 3.添加了display方法，统一输出
- * 4.属性都变为私有,__set(),__get()
- * 5.handlePage()处理页数的范围
- * 6.pageList()，当前页之前和之后的页
- * 7.为first()和end()添加省略号
- * 8.setConfig修改类的属性
- * 9.统一错误处理
- * 10.display的参数是数组，参数可以为空
+ * 分页：第八版
+ * 
+ * 1.传limit；通过$_GET传页数;
+ * 2.display方法
+ * 3.处理页数的范围；通过__set、__get处理类的私有属性;
+ * 4.pageList:首页末页;
+ * 5.select方法;jump方法
+ * 6.a.自定义config参数，setConfig可以改变config的值
+ *   b.display，根据传递数组的元素显示分页项目
+ * 7.处理URL;
+ * 8.ajax,ajax中error_reporting(0)特别重要；
+ * 
  * @author Kong
  *  */
 class Ajax_Page{
-    private $limit;//代表的是sql语句中 limit 0,5,
-    private $listRows;//每页显示的数据的条数
+    private $limit;//sql语句中的limit
+    private $listRows;//每页的数据条数
     private $page;//当前页
-    private $total;
-    private $pageNum;
+    private $total;//总记录数
+    private $pageNum;//总页数
     private $num;
-    private $errorMsg;//错误信息
+    private $errorMsg;
+    private $config=array('prev'=>"上一页","next"=>"下一页");
     private $url;
-    private $config=array("prev"=>"上一页",'next'=>"下一页");
-    /**
-     * 实例化时传入每页的条数
-     * @param int $_listRows：每页显示的条数 
-     * @param int $_total:总记录数
-     * */
-    public function __construct($_total,$_listRows=5,$_num=2){
+    public function __construct($_total,$_listRows,$_num=3){
         $this->num=$_num;
+        //从外部传入总记录数
         $this->total=$_total;
-        $this->listRows=$_listRows;
-        /*总页数  */
-        $this->pageNum=ceil($this->total/$this->listRows);
-        /*处理页数  */
-        $this->handlePage();
+        //每页的条数由外部传入;
+        $this->listRows=$_listRows;       
+        //总页数  
+        $this->pageNum=ceil($this->total/$this->listRows); 
+        //处理页数范围 
+        $this->handlePage();   
+        //分页公式;
         $this->limit=" limit ".($this->page-1)*$this->listRows.",".$this->listRows;
-        $this->url=$this->rewrite();
-        //echo $this->url;
+        $this->url=$this->reWrite();
+    }
+    public function __set($_value,$_key){
+        $this->$_key=$_value;
+    }
+    public function getErrorMsg(){
+        return $this->errorMsg;
+    }
+    public function __get($_key){
+        return $this->$_key;
+    }
+    private function reWrite(){
+        $newURL=null;
+        //获取path/queryString:/php3/oop/getData.php?action=show&id=8
+        $url=$_SERVER['REQUEST_URI'];
+        //echo "<hr>".$url."<hr>"; 
+        //parse_url:解析路径，返回路径的组件，有query下标的是查询字符串; 
+        /*array(2) {
+                ["path"]=>
+                  string(21) "/php3/oop/getData.php"
+                  ["query"]=>
+                  string(16) "action=show&id=8"
+                }  
+        */      
+        $parseURL=parse_url($url);
+        //echo "<pre>";
+        //var_dump($parseURL);
+        //echo "</pre>";
+        if(isset($parseURL['query'])){  
+            //把查询字符解析到数组中;    
+            /**
+             * array(2) {
+                  ["action"]=>
+                  string(4) "show"
+                  ["page"]=>
+                  string(1) "2"
+                }
+             **/      
+            parse_str($parseURL['query'],$query);            
+            //echo "<pre>";
+            //var_dump($query);
+            //echo "</pre>";
+            //销毁page元素
+            unset($query['page']);
+            //http_build_query:重新生成查询字符串;
+            $newURL=$parseURL['path']."?".http_build_query($query);
+            //echo "<hr>".$newURL."<hr>";
+        }else{
+            $newURL=$parseURL['path']."?";
+        }
+        return $newURL;
     }
     /**
-     * 重写URL，处理有或者没有查询字符串的情况
+     * 重新设置config的值;
+     * 
+     * @param array $_config;
+     *  */
+    public function setConfig($_config){
+         if($_config){
+             if(is_array($_config)&&count($_config)!=0){
+                 foreach ($_config as $_key=>$_value){
+                     //判断传进来的下标是否在config中
+                     if(array_key_exists($_key,$this->config)){
+                         $this->config[$_key]=$_value;
+                     }else{
+ $this->errorMsg="<span>setConfig()方法的参数的下标不正确</span>";
+                     }
+                 }
+             }else{
+                 $this->errorMsg="<span>setConfig()的参数为非空数组</span>";
+             }
+         }else{
+             $this->errorMsg="<span >setConfig()的参数不能为空</span>";
+         }             
+     }
+    /**
+     * 处理页数范围
+     * 
+     * 页数小于1时等于1；页数大于最大值时等于最大值；
      *   */
-    private function rewrite(){
-        $newurl=null;
-        //获取URL路径信息
-        $url=$_SERVER['REQUEST_URI'];
-        //echo $url."<br>";
-        //数组array('path'=>,'query'=>)
-        $parseURL=parse_url($url);
-        //var_dump(parse_url($url));
-        //如果有查询字符串的话
-        if(isset($parseURL['query'])){
-            //action=show
-            //把字符串解析到数组中
-            parse_str($parseURL['query'],$query);
-            //var_dump($query);
-            //使用分页类之前，把查询字符串中的page删掉;
-            unset($query['page']);
-            //var_dump($query);
-            //把查询字符串中的page删掉后，重新生成新的查询字符串
-            $newurl=$parseURL['path']."?".http_build_query($query);
-        }else{
-            //没有查询字符串的情况
-            $newurl=$parseURL['path']."?";
-        }
-        return $newurl;
-    }
-    /*处理页的范围  */
     private function handlePage(){
+        //$_GET['page']默认值为1;
         $this->page=!empty($_GET['page'])?$_GET['page']:1;
         if($this->page>$this->pageNum){
             $this->page=$this->pageNum;
@@ -79,92 +127,40 @@ class Ajax_Page{
         }
     }
     /**
-     * 返回错误信息
-     * @return string:错误信息;
-     *   */
-    public function getErrorMsg(){
-        return $this->errorMsg;
-    }
-    public function __set($_key,$_value){
-        $this->$_key=$_value;
-    }
-    public function __get($_key){
-        return $this->$_key;
-    }
-    /**
-     * 设置分页类的属性
-     * 
-     * @param array $_config  */
-    public function setConfig($_config){
-        if($_config){
-            /*变量是数组类型，并且不能为空  */
-            if(is_array($_config)&&count($_config)!=0){
-                foreach ($_config as $_key=>$_value){
-                    /*判断$_config的下标是不是$this->config的下标  */
-                    if(array_key_exists($_key, $this->config)){
-                        //如果是的话，就把$_value赋给$this->config
-                        $this->config[$_key]=$_value;
-                    }else{
-                        $this->errorMsg="下标不正确";
-                    }
-                }
-            }else{
-                $this->errorMsg="变量必须是数组类型，并且不能为空";
-            }
-        }else{
-            $this->errorMsg="setConfig参数不得为空";
-        }
-    }
-    private function present(){
-        return "<li>".$this->page."/".$this->pageNum."</li>";
-    }
-    /**
      * 首页
-     *   */
+     * @return string */
     private function first(){
-        $str=null;
+        $str=null;    
         $path=$this->url."&page=1";
         if($this->page==1){
-            $str="";
-        }else if($this->page>$this->num+2){
-            //href:hypertext reference;
-            $str="<li><a href='javascript:setPage(\"$path\")'>1</a></li><li class='ellipsis'>...</li>";
-        }else if($this->page>$this->num+1){
-            $str="<li><a href='javascript:setPage(\"$path\")'>1</a></li>";
-        }
-        return $str;
-    }
-    /*末页  */
-    private function end(){
-        $str=null;
-        $path=$this->url."&page=".($this->pageNum);
-        if($this->page==$this->pageNum){
+            //$str="<li class='disabled'><span>".$this->config['first']."</span></li>";
             $str=null;
-        }else if($this->pageNum-$this->page>$this->num+1){
-            $str="<li class='ellipsis'>...</li><li><a href='javascript:setPage(\"$path\")'>".($this->pageNum)."</a></li>";
-        }else if($this->pageNum-$this->page>$this->num){
-            $str="<li><a href='javascript:setPage(\"$path\")'>".($this->pageNum)."</a></li>";
-        }
+        }else if($this->page>$this->num+2){              
+            $str="<li><a href='javascript:setPage(\"$path\")'>1</li><li class='disabled'><span>...</span></li>";
+        }elseif($this->page>$this->num+1){           
+            $str="<li><a href='javascript:setPage(\"$path\")'>1</li>";
+        }        
         return $str;
     }
-    /*下一页 */
-    private function next(){
+    /**
+     * 前一页
+     * @return string  */
+    private function prev(){
         $str=null;
-        $path=$this->url."&page=".($this->page+1);
-        if($this->page==$this->pageNum){
-            $str="<li>".$this->config['next']."</li>";
-        }else{
-            $str="<li><a href='javascript:setPage(\"$path\")'>".$this->config['next']."</a></li>";
+        $path=$this->url."&page=".($this->page-1);
+        if($this->page==1){
+            //$str=null;
+            $str="<li class='disabled'><a>".$this->config['prev']."</a></li>";
+        }else{            
+            $str="<li><a href='javascript:setPage(\"$path\")'>".$this->config['prev']."</a></li>";
         }
         return $str;
     }
-    /* 通过循环显示页数  */
     private function pageList(){
         $prev=null;
-        $next=null;
-        /*循环着产生当前页的前3页  */
+        $next=null;        
+        //当前页减
         for($i=$this->num;$i>=1;$i--){
-            /*如果向前循环产生页面时少于剩余的页数，就忽略continue;*/
             if($this->page-$i<1){
                 continue;
             }else{
@@ -172,8 +168,9 @@ class Ajax_Page{
                 $prev.="<li><a href='javascript:setPage(\"$path\")'>".($this->page-$i)."</a></li>";
             }
         }
-        /*当前页 */
-        $present="<li class='present'>".$this->page."</li>";
+        //当前页;
+        $present="<li class='active'><span>".$this->page."</span></li>"; 
+        //当前页加
         for($j=1;$j<=$this->num;$j++){
             if($this->page+$j<=$this->pageNum){
                 $path=$this->url."&page=".($this->page+$j);
@@ -182,79 +179,114 @@ class Ajax_Page{
                 break;
             }
         }
-        return $prev.$present.$next;
+        return $prev.$present.$next;      
     }
-    /*上一页  */
-    private function prev(){
+    /**
+     * 当前页
+     * @return string  */
+    private function present(){
+        return "<li class='active'><span>".$this->page."</span></li>";
+    }
+    /**
+     * 下一页:当前页+1
+     * @return string*/
+    private function next(){
         $str=null;
-        $path=$this->url."&page=".($this->page-1);
-        if($this->page==1){
-            $str="<li>".$this->config['prev']."</li>";
-        }else{
-            $str="<li><a href='javascript:setPage(\"$path\")'>".$this->config['prev']."</a></li>";
+        $path=$this->url."&page=".($this->page+1);
+        if($this->page==$this->pageNum){
+            //$str=null;
+            $str="<li class='disabled'><a>".$this->config['next']."</a></li>";
+        }else{            
+            $str="<li><a href='javascript:setPage(\"$path\")'>".$this->config['next']."</a></li>";
         }
         return $str;
     }
-    /* 跳转页面  */
-    private function jump(){
+    /**
+     * 显示末页
+     * 
+     * 如果到了最后一页，末页不可以点击;不到最后一页，末页可以点击      
+     * 
+     * @return string $str：返回字符串 */
+    private function end(){
         $str=null;
-        $str="<li><input type='number' id='pageValue'  min=1 max=".($this->pageNum)." value=".$this->page."></li>";
+        $path=$this->url."&page=".($this->pageNum);
+        if($this->page==$this->pageNum){
+            //$str.="<li class='disabled'><span>末页</span></li>";
+            $str=null;
+        }elseif($this->pageNum-$this->page>$this->num+1){            
+            $str="<li class='disabled'><span>...<span></li><li><a href='javascript:setPage(\"$path\")'>".($this->pageNum)."</a></li>";
+        }elseif($this->pageNum-$this->page>$this->num){           
+            $str="<li><a href='javascript:setPage(\"$path\")'>".($this->pageNum)."</a></li>";
+        }        
         return $str;
     }
     /**
-     * 下拉选择 
-     * 模仿pageList的循环;
-     *  */
+     * 页数的select跳转
+     * @return string  */
     private function select(){
         $str=null;
-        $str="<li><select id='pageSelect'>";
+        $str.="<select class='form-control text-center' id='myAjaxSelect'>";
         for($i=$this->num*2;$i>=1;$i--){
             if($this->page-$i<1){
                 continue;
             }else{
-                $str.="<option value=".($this->page-$i).">".($this->page-$i)."/".($this->pageNum)."</option>";
+$str.="<option value='".($this->page-$i)."'>".($this->page-$i."/".$this->pageNum)."</option>";
             }
         }
         for($j=0;$j<=$this->num*2;$j++){
             if($this->page+$j<=$this->pageNum){
                 if($this->page==($this->page+$j)){
-                    $str.="<option value=".($this->page+$j)." selected>".($this->page+$j)."/".($this->pageNum)."</option>";
+                    $str.="<option value='".($this->page+$j)."' selected='selected'>".($this->page+$j."/".$this->pageNum)."</option>";
                 }else{
-                    $str.="<option value=".($this->page+$j).">".($this->page+$j)."/".($this->pageNum)."</option>";
+                    $str.="<option value='".($this->page+$j)."'>".($this->page+$j."/".
+                        $this->pageNum)."</option>";
                 }
             }else{
                 break;
             }
         }
-        $str.="</select></li>";
+        $str.="</select>";
         return $str;
     }
+    private function jump(){
+    	$str=null;
+    	$str.="<li>";
+    	$str.="<input type='text' class='form-control text-center' id='urAjaxInput' value='".$this->page."'>";    
+    	$str.="</li>";
+    	$path=$this->url."&page=".($this->page);
+    	$str.="<a id='jumpBar' href='javascript:setPage(\"$path\")' style='display:none'>".($this->page)."</a>";
+    	return $str;
+    }
     /**
-     * 显示分页信息;
-     * @param array $_data  */
+     * 分页元素根据传递的数组的参数显示，默认全部显示.
+     * 0：前一页，1：首页，2：循环数，3：末页，4：下一页，5：select，6：jump
+     * @param array $_data
+     * @return string  */
     public function display($_data=array(0,1,2,3,4,5,6)){
+        //参数必须是数组并且不能为空        
         if(is_array($_data)&&count($_data)!=0){
-            $str=null;
-            $str="<ul>";
+            $str="<ul class='pagination'>";
             $ui[0]=$this->prev();
             $ui[1]=$this->first();
             $ui[2]=$this->pageList();
             $ui[3]=$this->end();
             $ui[4]=$this->next();
-            $ui[5]=$this->jump();
-            $ui[6]=$this->select();
+            $ui[5]=$this->select();
+            $ui[6]=$this->jump();
             $data=array(0,1,2,3,4,5,6);
+            //var_dump($ui); 
             foreach ($_data as $key=>$value){
-                if(in_array($value,$data)){
+                //下标不能超出范围并且元素只能是数字;
+                if(in_array($value,$data) && is_int($value)){
                     $str.=$ui[$value];
                 }else{
-                    $this->errorMsg="下标错误";
-                }
-            }
-            $str.="</ul>";
+                    echo "<span class='text-danger'>display方法参数的下标错误</span>";
+                }                               
+            } 
+            $str.="</ul>";          
         }else{
-            $this->errorMsg="变量必须是数组类型，并且不能为空";
-        }
+echo "<span class='text-danger'>display方法传递的参数必须是非空数组</span>";
+        }       
         return $str;
     }
 }

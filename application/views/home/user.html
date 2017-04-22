@@ -122,7 +122,7 @@
 	
 				</div>
 				<table class="table table-bordered table-striped table-hover">
-					<tr><th>考试时间</th><th>课程</th><th>题目数</th><th>做了的题目</th><th>作对的题目</th><th>考试成绩</th></tr>
+					<tr><th>考试时间</th><th>课程</th><th>题目数</th><th>做了的题目</th><th>作对的题目</th><th>用时</th><th>考试成绩</th></tr>
 					{if $allScores}
 					{foreach $allScores as $key=>$value}
 					<tr>
@@ -131,6 +131,7 @@
 						<td>{$value->total}</td>
 						<td>{$value->ticked}</td>
 						<td>{$value->rightNum}</td>
+						<td>{$value->usedTime}</td>
 						<td>{$value->score}</td>
 						<input type="hidden" data="{$value->cid}" value="{$value->score}" info="{$value->cid},{$value->createdTime}" class='getScore'>
 					</tr>

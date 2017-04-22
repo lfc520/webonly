@@ -22,25 +22,27 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><a href='?a=index&action=welcome' target="main">后台首页</a></li>
-				<li><a href='?a=learning&action=showCourse'>课程管理</a></li>
-				<li class="active">显示课程</li>
-				<li><a href="/learning/addCourse" title='添加课程'><i
+				<li><a href='?a=learning&action=showCourse'>试卷管理</a></li>
+				<li class="active">显示试卷</li>
+				<li><a href="/learning/addCourse" title='添加试卷'><i
 						class="fa fa-plus-circle"></i></a></li>
 			</ul>
 			<table
 				class="table table-bordered table-striped table-hover table-condensed alllevel">
 				<tr>
 					<td>课程名称</td>
-					<td>课程描述</td>
+					<td>试卷描述</td>
 					<td>显示|隐藏</td>
+					<td>试卷时长</td>
 					<td>操作</td>
-					<td>课程创建日期</td>
+					<td>试卷创建日期</td>
 				</tr>
 				{if $data} {foreach $data as $key=>$value}
 				<tr>
 					<td>{$value->name}</td>
 					<td>{$value->description}</td>
 					<td>{$value->state}</td>
+					<td id="totalTime">{$value->totalTime}分钟</td>
 					<td><a href="/learning/updateCourse/id/{$value->id}">修改</a>| <a
 						href="/learning/deleteCourse/id/{$value->id}" class="deleteBtn">删除</a>
 					</td>
@@ -62,18 +64,18 @@
 		<div class="col-md-12">
 			<ul class="breadcrumb">
 				<li><a href='?a=index&action=welcome' target="main">后台首页</a></li>
-				<li><a href='?a=level&action=showCourse'>课程管理</a></li>
-				<li class="active">添加课程</li>
+				<li><a href='?a=level&action=showCourse'>试卷管理</a></li>
+				<li class="active">添加试卷</li>
 			</ul>
 			<table
 				class="table table-bordered table-striped table-hover table-condensed">
 				<form action="" method="post" enctype="multipart/form-data">
 					<tr>
-						<td class="text-right" width=100>课程名称</td>
+						<td class="text-right" width=100>试卷名称</td>
 						<td><input type="text" name="name" class="form-control"></td>
 					</tr>
 					<tr>
-						<td class="text-right">课程描述</td>
+						<td class="text-right">试卷描述</td>
 						<td><textarea name="description" class="form-control"></textarea></td>
 					</tr>
 					<tr>
@@ -84,8 +86,12 @@
 					<tr>
 						<td class="text-right">缩略图预览</td>
 						<td><img src="{$ROOT}/public/images/default.jpg"
-							width="150px" height="90px" class="img-circle" alt=""
+							width="50px" height="50px" class="img-circle" alt=""
 							id="preview"></td>
+					</tr>
+					<tr>
+						<td class="text-right">试卷时长</td>
+						<td><input type="text" name="totalTime" value="50" style="width:80px;">分钟</td>
 					</tr>
 					<tr class="text-center">
 						<td colspan="2"><input type="submit" value="提交"
@@ -128,6 +134,10 @@
 							src="{$ROOT}/public/uploads/course/{$oneCourse->thumbnail}"
 							width="150px" height="90px" class="img-circle" alt=""
 							id="preview"></td>
+					</tr>
+					<tr>
+						<td class="text-right">试卷时长</td>
+						<td><input type="text" name="totalTime" value="{$oneCourse->totalTime}" style="width:80px;">分钟</td>
 					</tr>
 					<tr class="text-center">
 						<td colspan="2"><input type="submit" value="提交"
@@ -718,7 +728,8 @@
 				<tr>
 					<td>课程类型</td>
 					<td>考试者</td>
-					<td>成绩 </td>
+					<td>成绩</td>
+					<td>用时</td>
 					<td>考试时间</td>
 					<td>操作</td>
 					<td><input type="checkbox" id="selectBar">全选</td>
@@ -729,6 +740,7 @@
 					<td style="width:120px;">{$value->cid}</td>
 					<td>{$value->uid}</td>
 					<td>{$value->score}</td>
+					<td>{$value->usedTime}</td>
 					<td>{$value->createdTime}</td>
 					<td>						
 						<a href="/learning/deleteExam/id/{$value->id}" class="deleteBtn">删除</a>						

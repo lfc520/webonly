@@ -18,6 +18,7 @@
 <link href="{$ROOT}/public/styles/common.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/header.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/buttons.css" rel="stylesheet">
+
 <script src="{$ROOT}/public/scripts/redirect.js"></script>
 <script src="{$ROOT}/public/scripts/login.js"></script>
 <link href="{$ROOT}/public/styles/quiz.css" rel="stylesheet"> 
@@ -28,8 +29,7 @@
 {include file="home/header.html"}
 <div class="container quiz">
 {if $show}
-	<div class="row">
-	{if $choices or $judges}	
+	<div class="row">	
 		<div class="col-md-10">
 		<ul class="breadcrumb" style="margin-bottom:2px;">
 			<li><a href="?" class="active">首页</a></li>			
@@ -40,14 +40,11 @@
 		<input type="hidden" name="uid" value="" id="uid">
 		<input type="hidden" name="cid" value="{$oneCourse->id}">
 		<input type="hidden" id="totalTime" value="{$oneCourse->totalTime}">
-		<input type="hidden" name="repeatSubmit" value="{$repeatSubmit}">
-		{if $choices}
 			<dl class="choice"><h1>选择题</h1>
 				{foreach $choices as $key=>$value}
 				<a name="{$key+1}"></a>
 				<div class="item">
-				<span>{$key+1}.</span>{$value->question}
-				<!-- <dt><span>{$key+1}.</span>{$value->question}</dt>  -->			
+				<dt><span>{$key+1}.</span>{$value->question}</dt> 			
 				<dd>
 					<input type="hidden" name='choice{$key+1}' value='{$value->id}'/>
 				</dd>
@@ -69,14 +66,12 @@
 				</dd>
 				</div>
 				{/foreach}
-			</dl>
-			{/if}		
-			{if $judges}				
+			</dl>						
 			<dl class="judge"><h1>判断题</h1>
 				{foreach $judges as $k=>$v}
 				<a name="{$k+1}"></a>
 				<div class="item">
-				<span>{$k+1}.</span>{$v->question}
+				<dt><span>{$k+1}.</span>{$v->question}</dt>
 				<dd><input type="hidden" name='judge{$k+1}' value='{$v->id}'/></dd>
 				<dd>					
 					<input type="radio" name='judge[{$v->id}]' value="1" num="{$k}" id='judge[{$v->id}]right'/>
@@ -88,15 +83,16 @@
 				</div>
 				{/foreach}
 			</dl>
-			{/if}
 			<span>
 				<input type="hidden" name="choiceNum" value="{$key+1}">
 				<input type="hidden" name="judgeNum" value="{$k+1}">
 			</span>
-			<div class="col-md-2 rightSide">
+			<div><input id="submitBtn" type="submit" name="send" value="提交" class="button button-raised button-primary" style="margin-bottom:15px"></div>
+		</form>
+		</div>
+		<div class="col-md-2 rightSide">
 			<ul class="jump">
 				<h5 class="countdown">剩余时间&nbsp;<span>计算中</span></h5>
-				<input type="hidden" id="usedTime" name="usedTime">
 				<h5>选择题</h5>
 				<div class="content1"></div>
 				<div class="clearfix"></div>
@@ -105,13 +101,6 @@
 				<div class="clearfix"></div>
 			</ul>
 		</div>
-			<div><input id="submitBtn" type="submit" name="send" value="提交" class="button button-raised button-primary" style="margin-bottom:15px;margin-left:-140px;"></div>
-		</form>
-		</div>
-		
-		{else}
-		<h1 class="text-danger">暂无考试，请尝试其它试卷！</h1>
-		{/if}
 	</div>
 {/if}
 {if $result}
@@ -125,24 +114,16 @@
 </div>
 <div class='row'>
 	<div class="col-md-8">
-	{if $choiceOutput or $judgeOutput}
 	<div class="alert alert-success">
-		<b>共{$total}道题，做了{$ticked}道题，用时{$usedTime},<span style='color:green;'>对了{$resultNum+$resultNum2}题，得分{$score}分</span></b>
+		<b>共{$total}道题，做了{$ticked}道题，<span style='color:green;'>对了{$resultNum+$resultNum2}题，得分{$score}分</span></b>
 		<a href="/learning/take/cid/{$oneCourse->id}"><b style="color:red">再做一次</b></a>&nbsp;&nbsp;<a href="?a=member&action=show&id={$smarty.session.oneUserName->id}"><b style="color:green;">查看历史成绩</b></a>
 	</div>
-	{else}
-	<h1 class="text-danger">您没有做任何题!</h1>
-	{/if}
-	{if $choiceOutput}
 	<dl><h1>选择题</h1>
 		{$choiceOutput}
 	</dl>
-	{/if}
-	{if $judgeOutput}
 	<dl><h1>判断题</h1>
 		{$judgeOutput}
 	</dl>
-	{/if}
 	</div>
 	<div class="col-md-4">	
 	<table class="table table-striped table-hover table-condensed" style="border:1px solid #ddd">

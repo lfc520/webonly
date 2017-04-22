@@ -7,10 +7,7 @@ class learning extends Controller{
         //显示的题目数量
         $choices=$this->model->getAll("choice","where course_id=".$data['cid']." order by Rand() limit 0,50");
         $judges=$this->model->getAll("judge","where course_id=".$data['cid']." order by Rand() limit 0,50");
-        //$this->dump($choices);
-        $code = mt_rand(0,1000000);
-        $_SESSION['repeatSubmit'] = $code;
-        $this->assign("repeatSubmit",$code);
+        //$this->dump($oneCourse);
         $this->assign("show",true);
         $this->assign("choices",$choices);
         $this->assign("judges",$judges);
@@ -33,87 +30,81 @@ class learning extends Controller{
     }
     public function result($data=array()){
         $this->showNav();
-        //$this->dump($_SESSION);
         if(isset($_POST['send'])){
-            //$this->dump($_POST);
             $oneCourse=$this->model->getOne("course", "where id=".$_POST['cid']);
             $this->assign("oneCourse",$oneCourse[0]);
-            //判断有选择题的情况下
-            if(is_array($_POST['choice'])){
-                $num=0;
-                $str.="";
-                $resultNum=0;
-                //echo $_POST['choiceNum'];
-                while($i<$_POST['choiceNum']){
-                    $i++;
-                    $num++;
-                    $oneChoice=$this->model->getOne("choice","where id=".$_POST['choice'.($i)]);
-                    if($oneChoice[0]->answer==$_POST['choice'][$_POST['choice'.($i)]]){
-                        $str.="<div class='item'><dt>".$num.".".$oneChoice[0]->question;
-                        $str.="<span class='glyphicon glyphicon-ok right'></span>";
-                        $str.="</dt>";
-                        $resultNum++;
+            $num=0;
+            $str.="";
+            $resultNum=0;
+            //echo $_POST['choiceNum'];
+            while($i<$_POST['choiceNum']){
+                $i++;
+                $num++;
+                $oneChoice=$this->model->getOne("choice","where id=".$_POST['choice'.($i)]);
+                if($oneChoice[0]->answer==$_POST['choice'][$_POST['choice'.($i)]]){
+                    $str.="<div class='item'><dt>".$num.".".$oneChoice[0]->question;
+                    $str.="<span class='glyphicon glyphicon-ok right'></span>";
+                    $str.="</dt>";
+                    $resultNum++;
+                }else{
+                    $str.="<div class='item'><dt>".$num.".".$oneChoice[0]->question;
+                    $str.="<span class='glyphicon glyphicon-remove wrong'></span>";
+                    $str.="</dt>";
+                    if($_POST['choice'][$_POST['choice'.($i)]]!=''){
+                        $str.="<dd class='failed'><b style='color:green;'>正确答案是：".$oneChoice[0]->answer."</b>，";
+                        $str.="<span class='wrong'>您选择的是：".$_POST['choice'][$_POST['choice'.($i)]]."。<span></dd>";
+                        $str.="<dd style='margin-bottom:3px;' class='alert alert-danger'><b style='color:red'>提示:</b>".$oneChoice[0]->tips."</dd>";
                     }else{
-                        $str.="<div class='item'><dt>".$num.".".$oneChoice[0]->question;
-                        $str.="<span class='glyphicon glyphicon-remove wrong'></span>";
-                        $str.="</dt>";
-                        if($_POST['choice'][$_POST['choice'.($i)]]!=''){
-                            $str.="<dd class='failed'><b style='color:green;'>正确答案是：".$oneChoice[0]->answer."</b>，";
-                            $str.="<span class='wrong'>您选择的是：".$_POST['choice'][$_POST['choice'.($i)]]."。<span></dd>";
-                            $str.="<dd style='margin-bottom:3px;' class='alert alert-danger'><b style='color:red'>提示:</b>".$oneChoice[0]->tips."</dd>";
-                        }else{
-                            $str.="<dd class='wrong'>您未答此题</dd>";
-                        }
+                        $str.="<dd class='wrong'>您未答此题</dd>";
                     }
-                    $str.= "<dd>A.".$oneChoice[0]->a."</dd>";
-                    $str.= "<dd>B.".$oneChoice[0]->b."</dd>";
-                    $str.="<dd>C.".$oneChoice[0]->c."</dd>";
-                    $str.="<dd>D.".$oneChoice[0]->d."</dd></div>";
                 }
+                $str.= "<dd>A.".$oneChoice[0]->a."</dd>";
+                $str.= "<dd>B.".$oneChoice[0]->b."</dd>";
+                $str.="<dd>C.".$oneChoice[0]->c."</dd>";
+                $str.="<dd>D.".$oneChoice[0]->d."</dd></div>";
             }
-            //判断有判断题的情况下
-            if(is_array($_POST['judge'])){
-                ////////judge/////////////////
-                $num2=0;
-                $str2.="";
-                $resultNum2=0;
-                while($j<$_POST['judgeNum']){
-                    $j++;
-                    $num2++;
-                    $oneJudge=$this->model->getOne("judge","where id=".$_POST['judge'.($j)]);
-                    if($oneJudge[0]->answer==$_POST['judge'][$_POST['judge'.($j)]]){
-                        $str2.="<div class='item'><dt>".$num2.".".$oneJudge[0]->question;
-                        $str2.="<span class='glyphicon glyphicon-ok right'></span>";
-                        $str2.="</dt></div>";
-                        $resultNum2++;
-                    }else{
-                        $str2.="<div class='item'><dt>".$num2.".".$oneJudge[0]->question;
-                        $str2.="<span class='glyphicon glyphicon-remove wrong'></span>";
-                        $str2.="</dt>";
-                        if($_POST['judge'][$_POST['judge'.($j)]]!=''){
-                            switch($oneJudge[0]->answer){
-                                case '1':
-                                    $answer="正确";
-                                    break;
-                                case "0":
-                                    $answer="错误";
-                            }
-                            switch($_POST['judge'][$_POST['judge'.($j)]]){
-                                case '1':
-                                    $answer2="正确";
-                                    break;
-                                case "0":
-                                    $answer2="错误";
-                            }
-                            $str2.="<dd><span class='wrong'>正确答案是：".$answer."</span>，";
-                            $str2.="<span class='wrong'>您选择的是：".$answer2."。<span></dd>";
-                            $str2.="<dd style='margin-bottom:3px;' class='alert alert-danger'><b style='color:red'>提示:</b>".$oneJudge[0]->tips."</dd>";
-                        }else{
-                            $str2.="<dd class='wrong'>您未答此题</dd>";
+            ////////judge/////////////////
+            $num2=0;
+            $str2.="";
+            $resultNum2=0;
+            //echo $_POST['choiceNum'];
+            //echo $_POST['judgeNum'];
+            while($j<$_POST['judgeNum']){
+                $j++;
+                $num2++;
+                $oneJudge=$this->model->getOne("judge","where id=".$_POST['judge'.($j)]);
+                if($oneJudge[0]->answer==$_POST['judge'][$_POST['judge'.($j)]]){
+                    $str2.="<div class='item'><dt>".$num2.".".$oneJudge[0]->question;
+                    $str2.="<span class='glyphicon glyphicon-ok right'></span>";
+                    $str2.="</dt></div>";
+                    $resultNum2++;
+                }else{
+                    $str2.="<div class='item'><dt>".$num2.".".$oneJudge[0]->question;
+                    $str2.="<span class='glyphicon glyphicon-remove wrong'></span>";
+                    $str2.="</dt>";
+                    if($_POST['judge'][$_POST['judge'.($j)]]!=''){
+                        switch($oneJudge[0]->answer){
+                            case '1':
+                                $answer="正确";
+                                break;
+                            case "0":
+                                $answer="错误";
                         }
-                        $str2.= "<dd>A.正确,";
-                        $str2.= "B.错误</dd></div>";
+                        switch($_POST['judge'][$_POST['judge'.($j)]]){
+                            case '1':
+                                $answer2="正确";
+                                break;
+                            case "0":
+                                $answer2="错误";
+                        }
+                        $str2.="<dd><span class='wrong'>正确答案是：".$answer."</span>，";
+                        $str2.="<span class='wrong'>您选择的是：".$answer2."。<span></dd>";
+                        $str2.="<dd style='margin-bottom:3px;' class='alert alert-danger'><b style='color:red'>提示:</b>".$oneJudge[0]->tips."</dd>";
+                    }else{
+                        $str2.="<dd class='wrong'>您未答此题</dd>";
                     }
+                    $str2.= "<dd>A.正确,";
+                    $str2.= "B.错误</dd></div>";
                 }
             }
             //echo $_POST['cid'];
@@ -121,6 +112,8 @@ class learning extends Controller{
             //$allCourse=$course->getFrontCourse();
             //$this->dump($userLeaderboard);
             $this->assign("course_name", $oneCourse[0]->name);
+            /* $allCourse=$this->model->getAll("course","where state=1 order by id desc"); */
+            
             $arr=array();
             foreach ($userLeaderboard as $key=>$value){
                 $oneUser=$this->model->getOne("user","where id=".$value->uid);
@@ -133,46 +126,28 @@ class learning extends Controller{
             $this->model->total=$_POST['choiceNum']+$_POST['judgeNum'];
             $this->model->ticked=count($_POST['judge'])+count($_POST['choice']);
             $this->model->rightNum=$resultNum+$resultNum2;
-            //echo $resultNum."<br>";
-            //echo $resultNum2."<br>";
             //$this->model->score=$resultNum*10+$resultNum2*10;
             $this->model->score=number_format(($resultNum+$resultNum2)/($_POST['choiceNum']+$_POST['judgeNum'])*100,2);
             //$this->model->createExam();
-            if(is_array($_POST['choice'])&&is_array($_POST['judge'])){
-                $total=$_POST['choiceNum']+$_POST['judgeNum'];
-                $score=number_format(($resultNum+$resultNum2)/($total)*100,2);
-            }else if(is_array($_POST['choice'])||is_array($_POST['judge'])){
-                $total=$_POST['choiceNum']||$_POST['judgeNum'];
-                $score=number_format(($resultNum+$resultNum2)/($total)*100,2);
-            }
             $array=array(
                 "uid"=>$_POST['uid'],
                 "cid"=>$_POST['cid'],
-                "total"=>$total,
+                "total"=>$_POST['choiceNum']+$_POST['judgeNum'],
                 'ticked'=>count($_POST['judge'])+count($_POST['choice']),
                 'rightNum'=>$resultNum+$resultNum2,
-                'score'=>$score,
-                'usedTime'=>$_POST['usedTime'],
+                'score'=>number_format(($resultNum+$resultNum2)/($_POST['choiceNum']+$_POST['judgeNum'])*100,2),
                 'createdTime'=>date('Y-m-d H:i:s')
             );
-            if($_SESSION['repeatSubmit']==$_POST['repeatSubmit']){
-                //把考试结果提交到数据库中
-                $this->model->add("examination", $array);
-                unset($_SESSION['repeatSubmit']);
-            }
-            /////
-            //echo $total;
-            $this->assign("total",$total);
-            //$this->assign("total",($_POST['choiceNum']+$_POST['judgeNum']));
-            $this->assign("ticked",(count($_POST['judge'])+count($_POST['choice'])));
-            $this->assign("choiceOutput",$str);
-            $this->assign("judgeOutput",$str2);
-            $this->assign("resultNum",$resultNum);
-            $this->assign("resultNum2",$resultNum2);
-            $this->assign("usedTime",$_POST['usedTime']);
-            $this->assign("score",$score);
-            $this->assign("result",true);
+            $this->model->add("examination", $array);
         }
+        $this->assign("total",($_POST['choiceNum']+$_POST['judgeNum']));
+        $this->assign("ticked",(count($_POST['judge'])+count($_POST['choice'])));
+        $this->assign("choiceOutput",$str);
+        $this->assign("judgeOutput",$str2);
+        $this->assign("resultNum",$resultNum);
+        $this->assign("resultNum2",$resultNum2);
+        $this->assign("score",number_format(($resultNum+$resultNum2)/($_POST['choiceNum']+$_POST['judgeNum'])*100,2));
+        $this->assign("result",true);
         $this->view("home/quiz.html");
     }
     public function deleteAll(){
@@ -180,7 +155,7 @@ class learning extends Controller{
             $multiId=implode(",", $_POST['selectAll']);
             //echo $multiId;
             if($this->model->delete("examination","where id in (".$multiId.")")){
-                $this->redirect("多删成功",$_SERVER['HTTP_REFERER']);
+                $this->redirect("多删成功","/learning/showExam");
             }else{
                 $this->redirect("多删失败","",0);
             }
@@ -244,9 +219,9 @@ class learning extends Controller{
                 'addtime'=>date('Y-m-d H:i:s')
             );
             if($this->model->add('judge',$array)){
-                $this->redirect("试题添加成功",$_SERVER['HTTP_REFERER']);
+                $this->redirect("试题添加成功","/learning/showJudge");
             }else{
-                $this->redirect("试题添加失败",$_SERVER['HTTP_REFERER'],0);
+                $this->redirect("试题添加失败","",0);
             }
         }
         $this->course();
@@ -262,9 +237,9 @@ class learning extends Controller{
                 'course_id'=>$_POST['course']
             );
             if($this->model->update('judge',$array,"where id=".$data['id'])){
-                $this->redirect("试题修改成功",$_SERVER['HTTP_REFERER']);
+                $this->redirect("试题修改成功","/learning/showJudge");
             }else if($this->model->update('judge',$array,"where id=".$data['id'])==0){
-                $this->redirect("没有修改试题",$_SERVER['HTTP_REFERER']);
+                $this->redirect("没有修改试题","/learning/showJudge");
             }else{
                 $this->redirect("试题修改失败",$_SERVER['HTTP_REFERER'],0);
             }
@@ -440,7 +415,7 @@ class learning extends Controller{
                 'addtime'=>date('Y-m-d H:i:s')
             );
             if($this->model->add("choice",$array)){
-                $this->redirect("选择题添加成功",$_SERVER['HTTP_REFERER']);
+                $this->redirect("选择题添加成功","/learning/showChoice");
             }else{
                 $this->redirect("选择题添加失败","/learning/addchoice",0);
             }
@@ -536,9 +511,9 @@ class learning extends Controller{
         if($data['id']){
             $result=$this->model->delete("course", "where id=".$data['id']);
             if($result){
-                $this->redirect("删除成功", $_SERVER['HTTP_REFERER']);
+                $this->redirect("删除成功", "/learning/showCourse");
             }else{
-                $this->redirect("删除失败", $_SERVER['HTTP_REFERER'],0);
+                $this->redirect("删除失败", "/learning/showCourse",0);
             }
         }
         $this->assign("addCourse",true);
@@ -556,12 +531,12 @@ class learning extends Controller{
                 'name'=>$_POST['name'],
                 'description'=>$_POST['description'],
                 'thumbnail'=>$file,
-                'state'=>0,
+                'state'=>1,
                 'date'=>date('Y-m-d H:i:s'),
                 'totalTime'=>$_POST['totalTime']
             );
             if($this->model->add("course",$array)){
-                $this->redirect("课程添加成功",$_SERVER['HTTP_REFERER']);
+                $this->redirect("课程添加成功","/learning/showCourse");
             }else{
                 $this->redirect("课程添加失败",$_SERVER['HTTP_REFERER'],0);
             }

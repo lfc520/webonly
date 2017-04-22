@@ -58,7 +58,7 @@
 </div>
 	<!-- reportModal -->
 <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog" role="document" style="margin-top:80px;">
     <div class="modal-content">
       <div class="modal-header" style="padding-top:5px;padding-bottom:5px;text-align:center;">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -78,7 +78,7 @@
 				<span class="input-group-addon">
 				<i class="glyphicon glyphicon glyphicon-envelope"></i>
 				</span> 
-				<input class="form-control" placeholder="任意的联系方式" id="contact" name="password" type="password" value="">
+				<input class="form-control" placeholder="邮箱或手机" id="contact" name="password" type="text" value="">
 			</div>
 		</div>
 		<div class="form-group" style="margin-bottom:5px;">
@@ -86,7 +86,7 @@
 				<span class="input-group-addon">
 				<i class="glyphicon glyphicon glyphicon-book"></i>
 				</span> 
-				<textarea class="form-control" id="reportWord" style="height:50px;"></textarea>
+				<textarea class="form-control" id="reportMsg" style="height:50px;" placeholder="请留言..."></textarea>
 			</div>
 		</div>
 		<div class="form-group" style="margin-bottom:0;">
@@ -164,6 +164,21 @@
       </div>
       <div class="modal-footer" style="padding:5px;">
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">提示框</h4>
+      </div>
+      <div class="modal-body text-danger msg h3">
+      </div>
+      <div class="modal-footer">
+        <span><a href="http://www.webonly.org" target="_blank">http://www.webonly.org</a></span>
       </div>
     </div>
   </div>

@@ -30,6 +30,24 @@
 	<div class="col-md-9">
 	<dl>
 		<dt>{$oneAsk->topic}</dt>
+		{if $responds}
+		{foreach $responds as $key=>$value}
+		<table class="table table-bordered table-striped table-hover">
+		<tr>
+			<td width=35><img class="img-circle" id="defaultUser" src="{$ROOT}public/uploads/user/{$value->icon}"></td>
+			<td>{$value->uid}</td>
+		</tr>
+		<tr>
+			<td colspan='2'>{$value->content}</td>
+		</tr>
+		<tr>
+			<td colspan='2'>{$value->date}</td>
+		</tr>
+		</table>
+		{/foreach}
+		{else}
+		<dd>暂无回复</dd>
+		{/if}
 	</dl>
 	</div>
 	<div class="col-md-3">left</div>
@@ -76,64 +94,7 @@
 		</div> 
 </div>		
 {/if}
-<!-- {if $oneAsk}
-<div class="row middle">
-	<div class="col-md-8">
-		<div style="padding-left:15px;" class="text-primary h1">{$oneAsk->topic}</div>
-		{if $data}
-		{foreach $data as $key=>$value}		
-		<table border=0 width=100% cellspacing=0 cellpadding=0>
-			<tr>
-				<td class='icon' style="width:100px;padding:10px;">				
-					{if $value->icon}<img src="public/uploads/member/{$value->icon}" class="img-circle">{else}hello{/if}
-					&nbsp;&nbsp;
-				</td>
-				<td><span class="h3">{$value->username}</span></td>
-				<td><span class="h5">{$value->date}</span></td>
-			</tr>
-			<tr style="border-top:1px dashed #ddd;">
-				<td colspan='3' style="padding:15px;" class="text-warning">{$value->content}</td>				
-			</tr>
-			<tr>
-				<td colspan="2" style="padding:15px;">			
-				{foreach $value as $k=>$v}				
-				{$v->content}
-				<a href='?a=ask&action=respond&id={$v->id}&pid={$oneAsk->id}&cid={$oneAsk->cid}'>回复</a>||<a href='#'>赞</a>||<a href='#'>踩</a>
-				{/foreach}								
-				</td>
-			</tr>
-		</table>		
-		{/foreach}	
-		<div>{$page}</div>	
-		{else}
-		<table border=0 width=100% cellspacing=0 cellpadding=0>
-			<tr style="border-top:1px dashed #ddd;">
-				<td colspan='3' style="padding:15px;" class="text-warning">暂无回复！</td>
-				<td class="text-right" style="padding-right:5px;"><a href="?a=ask&m=respond&id={$oneAsk->id}&pid={$oneAsk->id}&cid={$oneAsk->cid}" class="button button-raised button-primary">我来回复</a></td>				
-			</tr>
-		</table>
-		{/if}		
-	</div>
-	<div class="col-md-4">
-		<dl class="board">
-				<dt class="text-center">热门问答</dt>
-				{if $askLeaderboard}
-				{foreach $askLeaderboard as $key=>$value}
-				<dd><span>{$key+1}</span><a href="?a=ask&action=detail&id={$value->id}">{$value->topic|truncate:25:"..."}</a></dd>
-				{/foreach}	
-				{else}			
-				<dd><span>1</span><a href="javascript:void(0)">最佳前端入门方法</a></dd>
-				<dd class="bg-gray"><span>2</span><a href="javascript:void(0)">CSS权威指南如何？</a></dd>
-				<dd><span>3</span><a href="javascript:void(0)">JavaScript红宝书在哪儿有卖？</a></dd>
-				<dd class="bg-gray"><span>4</span><a href="javascript:void(0)">锋利的jQuery锋利在哪儿？</a></dd>
-				<dd><span>5</span><a href="javascript:void(0)">PHP核心模块这边书有价值吗？</a></dd>
-				<dd class="bg-gray"><span>6</span><a href="javascript:void(0)">PHP设计模式的低劣之处</a></dd>
-				<dd><span>7</span><a href="javascript:void(0)">程序员修炼之道！</a></dd>
-				{/if}
-			</dl>
-	</div>
-</div>
-{/if} -->
+
 {if $showTopic}
 <div class="row">
 	<div class="col-md-8">
@@ -194,7 +155,7 @@
 						<tr>
 							<td>
 							<textarea rows="15" cols="150" name="respond" class="form-control"></textarea>	
-							<!-- <script id="commentEditor" name="respond" style="width:100%">DDDD</script>	 -->					
+							<!-- <script id="respond" name="respond" style="width:100%"></script>	 -->			
 							</td>
 						</tr>
 						<tr><td><input type="submit" value="提交" name="send" class="btn btn-success" id="submitBtn"></td></tr>
@@ -228,6 +189,7 @@
 <script src="{$ROOT}/vendor/ueditor/ueditor.all.js"></script>
 <script>
 	var ue=UE.getEditor("commentEditor");
+	
 </script>
 </body>
 </html>

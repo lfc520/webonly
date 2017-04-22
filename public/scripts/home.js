@@ -1,4 +1,27 @@
 $(function(){	
+	$("#reportBar").click(function(){
+		$.ajax({
+			"type":"post",
+			"url":"/feedback/getFeedback",
+			'data':{
+				'username':$("#username").val(),
+				'contact':$("#contact").val(),
+				'reportMsg':$("#reportMsg").val()
+			},
+			success:function(response){
+				if(response=='ok'){
+					$("#reportModal").modal('hide');
+					$("#msgModal .msg").html("感谢您的反馈");
+					$("#msgModal").modal("show");
+					setTimeout(function(){
+						$("#msgModal").modal("hide");
+					},2000);
+				}else{
+					console.log(response);
+				}
+			}
+		});
+	});
 	$(".takeTest").click(function(){
 		if(!sessionStorage.getItem("username")){
 			$("#msgModal .msg").html("请先登录");

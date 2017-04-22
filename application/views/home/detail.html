@@ -17,6 +17,7 @@
 <link href="{$ROOT}/public/styles/header.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/buttons.css" rel="stylesheet">
 <script src="{$ROOT}/public/scripts/redirect.js"></script>
+
 <script src="{$ROOT}/public/scripts/login.js"></script>
 <link href="{$ROOT}/public/styles/quiz.css" rel="stylesheet"> 
 <link href="{$ROOT}/public/styles/tools.css" rel="stylesheet">
@@ -52,51 +53,33 @@
 					<dd class="subtitle">{$oneArticle->date}  {$oneArticle->source}  <a href="#">我有话说(2,906人参与)</a> {$oneArticle->pageview}人已读</dd>
 					{if $oneArticle->lead}<dd class="lead">{$oneArticle->lead}</dd>{/if}
 					<dd class="content">{$oneArticle->content}</dd>
-					<dd class="tag"> 文章关键词：<a href="#">{$oneArticle->tag}</a></dd>
-					<dd class="share">
-						<div class="jiathis_style_24x24">
-							<a class="jiathis_button_qzone"></a>
-							<a class="jiathis_button_tsina"></a>
-							<a class="jiathis_button_tqq"></a>
-							<a class="jiathis_button_weixin"></a>
-							<a class="jiathis_button_renren"></a>
-							<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-							<a class="jiathis_counter_style"></a>
-						</div>
-					</dd>
+					<!-- <dd class="tag"> 文章关键词：<a href="#">{$oneArticle->tag}</a></dd> -->
+					
 				{else}
 					<dt class="title">新闻标题</dt>
 					<dd class="subtitle">2014年10月09日02:39  新京报 我有话说(2,906人参与) 80人已读</dd>
 					<dd>正文</dd>
-					<dd class="tag"> 文章关键词：<a href="#">团伙帮派</a>  <a href="#">利益集团 </a> </dd>
-					<dd class="share">
-					<!-- JiaThis Button BEGIN -->
-						<div class="jiathis_style_24x24">
-							<a class="jiathis_button_qzone"></a>
-							<a class="jiathis_button_tsina"></a>
-							<a class="jiathis_button_tqq"></a>
-							<a class="jiathis_button_weixin"></a>
-							<a class="jiathis_button_renren"></a>
-							<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-							<a class="jiathis_counter_style"></a>
-						</div>
-					<!-- JiaThis Button END -->
-					</dd>
+					<!-- <dd class="tag"> 文章关键词：<a href="#">团伙帮派</a>  <a href="#">利益集团 </a> </dd> -->
+					
 				{/if}
 				</dl>
-			</div>
-			<div class="comment">
+				<div class="comment">
 				<dl>
-					<dd>	<textarea class="comment_content"></textarea></dd>
-					
-					<input type="hidden" value="{$oneArticle->id}" id="aid">
-					<dd class="text-right"><input type="button" value="发表评论" class="btn btn-success" id="commentBtn"></dd>						
+					<dd class="postComment">	
+						<textarea class="form-control comment_content"></textarea>
+					    <input type="hidden" value="{$oneArticle->id}" id="aid">
+					    <input type="button" value="发表评论" class="btn btn-default pull-right" id="commentBtn">
 					</dd>
 					<dd id="showComment">
 
 					</dd>
+					<dd>
+						<div id="page"></div>
+					</dd>
 				</dl>
 			</div>
+			</div>
+			
 		</div>			
 		<div class="recommend col-md-4">	
 			<table class="table table-bordered table-striped table-hover table-condensed">
@@ -115,6 +98,6 @@
 	<li style="border-bottom:1"><span><a data-toggle="modal" data-target="#reportModal">反馈</a></span><i class="fa fa-comment"></i></li>
 	<li style="border-bottom:0" id="up"><span>回到顶部</span><i class="fa fa-chevron-up"></i></li>
 </ul>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<script src="{$ROOT}/public/scripts/comment.js"></script>
 </body>
 </html>

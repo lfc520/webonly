@@ -221,10 +221,10 @@
 				{foreach $AllAsk as $key=>$value}
 				<table class="table table-bordered table-striped table-hover">
 				<tr>
-					<td><a href="/ask/detail/id/{$value->id}">{$value->topic|truncate:40:"..."}</a></td>
+					<td><a href="/ask/detail/id/{$value->id}" target="_blank">{$value->topic|truncate:40:"..."}</a></td>
 					<td width=100>
 					{if $value->reponse_num}
-					<a  href="?a=ask&action=detail&id={$value->id}" target="_blank">{$value->reponse_num}条回复</a>
+					<a  href="/ask/detail/id/{$value->id}" target="_blank">{$value->reponse_num}条回复</a>
 					{else}
 					暂无回复
 					{/if}

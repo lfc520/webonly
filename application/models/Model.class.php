@@ -38,6 +38,9 @@ class Model{
         //fetchObject()：从结果集对象中取得数据，
         //$data=$result->fetchObject();
         $data=$result->fetchAll(PDO::FETCH_OBJ);
+        //echo "<pre>";
+        //var_dump($data);
+        //echo "<pre>";
         return $data;
     }
     /*添加*/

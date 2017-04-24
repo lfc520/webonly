@@ -30,3 +30,20 @@
 	height:750px;
 	width:700px;
 }
+.askMain{
+	margin-top:5px;
+	background:#fff;
+	border:1px solid #ddd;
+	box-shadow:0 0 3px #ddd;
+}
+.askMain dt{
+	margin:5px;
+	text-align:center;
+	font-size:30px;
+}
+.askLeft{
+	margin-top:5px;
+	background:#fff;
+	border:1px solid #ddd;
+	box-shadow:0 0 3px #ddd;
+}

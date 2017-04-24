@@ -10,7 +10,7 @@ $(function(){
         $(".point").html(sessionStorage.getItem("point"));
         $("#memberSpace").attr("href","/user/space/id/"+sessionStorage.getItem("id"));
         if(sessionStorage.getItem("icon")){
-        	$(".dropdown img").attr("src","public/uploads/user/"+sessionStorage.getItem("icon"));
+        	$(".dropdown img").attr("src","http://www.webonly.org/public/uploads/user/"+sessionStorage.getItem("icon"));
         }
         $("#uid").val(sessionStorage.getItem("id"));
         $(".UIA").css({"display":"none"});
@@ -92,7 +92,7 @@ $(function(){
 	                    $("#uid").val(str[0].id);
 	                    //$("#memberSpace").attr("href","?a=member&action=show&id="+str[0].id);
 	                    if(sessionStorage.getItem("icon")){
-	    		        			$(".dropdown img").attr("src","public/uploads/user/"+sessionStorage.getItem("icon"));
+	    		        			$(".dropdown img").attr("src","http://www.webonly.org/public/uploads/user/"+sessionStorage.getItem("icon"));
 	    		        		}
 	                    $(".point").html(str[0].countdown);
 	                    sessionStorage.setItem("point",str[0].countdown);                    

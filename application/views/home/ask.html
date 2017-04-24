@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{$oneAsk->topic}</title>
+<title>{$oneAsk->topic|strip_tags}</title>
 <link href="{$ROOT}/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="{$ROOT}/vendor/bootstrap/css/bootstrap-theme.css" rel="stylesheet">
 <script src="{$ROOT}/vendor/jquery/jquery-3.1.1.js"></script>
@@ -27,7 +27,7 @@
 <div class="container">
 {if $detail}
 <div class="row">
-	<div class="col-md-9">
+	<div class="col-md-9 askMain">
 	<dl>
 		<dt>{$oneAsk->topic}</dt>
 		{if $responds}
@@ -50,7 +50,11 @@
 		{/if}
 	</dl>
 	</div>
-	<div class="col-md-3">left</div>
+	<div class="col-md-3">
+		<div class="askLeft">
+			<h1>Coming Soon!</h1>
+		</div>
+	</div>
 </div>
 {/if}
 {if $AllAsk}

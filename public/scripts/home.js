@@ -139,7 +139,7 @@ $(function(){
         $(".point").html(sessionStorage.getItem("point"));
         $("#memberSpace").attr("href","/user/space//id/"+sessionStorage.getItem("id"));
         if(sessionStorage.getItem("icon")){
-        	$(".dropdown img").attr("src","public/uploads/member/"+sessionStorage.getItem("icon"));
+        	$(".dropdown img").attr("src","http://www.webonly.org/public/uploads/member/"+sessionStorage.getItem("icon"));
         }        
         $(".UIA").css({"display":"none"});
         $(".UIB").css({"display":"block"});

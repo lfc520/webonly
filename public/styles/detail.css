@@ -102,18 +102,12 @@ textarea:focus {
 	background:#ddd;
 }
 #showComment table{
-	background:#fff;
-	border:1px solid #e5e5e5;
-	border-left:0;
-	border-right:0;
-	width:95%;
-	margin:auto;
-	margin-top:5px;
+	
 }
 #showComment table tr,#showComment table td{
-	border:0;
+	
 }
-#showComment img{
+#showComment .comment_icon{
 	width:48px;
 	height:48px;
 }

@@ -36,7 +36,7 @@ class download extends Controller{
     }
     public function update($data=array()){
         if(isset($_POST['send'])){
-            $transfer=new Transfer(array("fieldName"=>"newpic",'allowType'=>array('zip'),'path'=>'public/uploads/download'));
+            $transfer=new Transfer(array("fieldName"=>"newpic",'allowType'=>array('zip',"rar"),'path'=>'public/uploads/download'));
             if(is_uploaded_file($_FILES['newpic']['tmp_name'])){
                 if($transfer->upload()){
                     $name=$transfer->getNewFile();
@@ -84,7 +84,7 @@ class download extends Controller{
     public function add(){
         if(isset($_POST['send'])){
             if(is_uploaded_file($_FILES['pic']['tmp_name'])){
-                $transfer=new Transfer(array("fieldName"=>"pic",'allowType'=>array('zip'),'path'=>'public/uploads/download'));
+                $transfer=new Transfer(array("fieldName"=>"pic",'allowType'=>array('zip','rar'),'path'=>'public/uploads/download'));
                 if($transfer->upload()){
                     $name=$transfer->getNewFile();
                 }

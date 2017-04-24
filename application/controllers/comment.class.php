@@ -5,7 +5,7 @@ class comment extends Controller{
         $array=array(
             'state'=>1,
             'uid'=>$_POST['uid'],
-            'tid'=>$_POST['tid'],
+            'aid'=>$_POST['aid'],
             'content'=>$_POST['content'],
             'date'=>date("Y-m-d H:i:s")
         );
@@ -17,9 +17,16 @@ class comment extends Controller{
         }
     }
     public function getAll(){
-        $total=$this->model->getAllTotal("comment","where state=1");
+        //$this->dump($_GET);
+        $total=$this->model->getAllTotal("comment","where state=1 and aid=".$_GET['aid']);
         $page=new Ajax_Page($total,5);
-        $allComment=$this->model->getAll("comment","where state=1 order by id desc ".$page->limit);
+        $allComment=$this->model->getAll("comment","where state=1 and aid=".$_GET['aid']." order by id desc ".$page->limit);
+        foreach($allComment as $key=>$value){
+            $oneUser=$this->model->getOne("user", "where id=".$value->uid);
+            $value->icon=$oneUser[0]->icon;
+            $value->username=$oneUser[0]->username;
+        }
+        //$this->dump($allComment);
         $temp=array();
         $temp[0]=$allComment;
         $temp[1]=$page->display(array(0,1,2,3,4));

@@ -108,36 +108,45 @@ class user extends Controller{
         $captcha->showCaptcha('/public/fonts/ARIALNB.TTF');
     }
     public function space($data=array()){
-        /* $user=new userModel();
-        $upload=new UploadFile("pic","public/uploads/member");
+        $transfer=new Transfer(array("fieldName"=>"pic","path"=>"public/uploads/user"));
         if(isset($_POST['send'])){
-            $user->id=$_POST['id'];
-            $user->email=$_POST['email'];
             if($_POST['pwd']==$_POST['newpwd']){
-                $user->pwd=$_POST['newpwd'];
+                $pwd=$_POST['newpwd'];
             }else{
-                $user->pwd=md5($_POST['newpwd']);
+                $pwd=md5($_POST['newpwd']);
             }
             if(is_uploaded_file($_FILES['pic']['tmp_name'])){
-                if($upload->upload("pic")){
-                    $user->icon=$upload->getNewName();
+                if($transfer->upload()){
+                    $icon=$transfer->getNewFile();
                 }
             }else {
-                $user->icon=$_POST['newpic'];
+                $icon=$_POST['newpic'];
                 //echo "没有上传".$_POST['newpic'];
             }
-            //Tools::dump($_POST);
-            if($user->updateUser()){
-                //echo "ok";
-                Tools::Redirect("会员资料修改成功",$_SERVER['HTTP_REFERER']);
-            }else if($user->updateUser()==0){
-                Tools::Redirect("会员资料没有修改",$_SERVER['HTTP_REFERER']);
-                //echo "not changed";
+            $array=array(
+                'pwd'=>$pwd,
+                'email'=>$_POST['email'],
+                'icon'=>$icon
+            );
+            if($this->model->update("user", $array,"where id=".$_POST['id'])){
+                echo "ok";
+            }else if($this->model->update("user", $array,"where id=".$_POST['id'])==0){
+                echo "no changed";
             }else{
-                Tools::Redirect("会员资料修改失败",$_SERVER['HTTP_REFERER'],2);
+                echo "failed";
             }
+            //Tools::dump($_POST);
+//             if($user->updateUser()){
+//                 //echo "ok";
+//                 Tools::Redirect("会员资料修改成功",$_SERVER['HTTP_REFERER']);
+//             }else if($user->updateUser()==0){
+//                 Tools::Redirect("会员资料没有修改",$_SERVER['HTTP_REFERER']);
+//                 //echo "not changed";
+//             }else{
+//                 Tools::Redirect("会员资料修改失败",$_SERVER['HTTP_REFERER'],2);
+//             }
         }
-        $comment=new commentModel();
+        /*$comment=new commentModel();
         $article=new articleModel();
         $product=new productModel();
         $ask=new askModel();
@@ -146,25 +155,23 @@ class user extends Controller{
             $this->showNav();
             $oneUser=$this->model->getOne("user","where id=".$data['id']);
             $this->assign("oneUser",$oneUser[0]);
-            /////////////////////////////////
-            /* $comment->uid=$_GET['id'];
-            $allComments=$comment->getAllCommentsByUID();
+            //$this->page($this->model->getAllTotal("comment","where uid=".$data['id']));
+            //所有评论
+            $allComments=$this->model->getAll("comment","where uid=".$data['id']." order by id desc");
             foreach ($allComments as $key=>$value){
-                $article->id=$value->aid;
-                $oneArticle=$article->getOneArticle();
-                $value->title=$oneArticle->title;
+                $oneArticle=$this->model->getOne("article","where id=".$value->aid);
+                $value->title=$oneArticle[0]->title;
             }
-            $product->uid=$_GET['id'];
-            $allOrders=$product->getAllOrdersByUID();
+            $this->assign("allComments",$allComments);
+            //所有订单
+            $allOrders=$this->model->getAll("orders","where uid=".$data['id']." order by id desc");
             foreach ($allOrders as $value){
                 $pids=explode(",", $value->pid);
                 $str=null;
                 foreach ($pids as $v){
-                    $product->id=$v;
-                    //Tools::dump($v);
-                    $oneProduct=$product->getOneProduct();
+                    $oneProduct=$this->model->getOne("product","where id=".$v);
                     //Tools::dump($oneProduct);
-                    $str.=$oneProduct->name.",";
+                    $str.=$oneProduct[0]->name.",";
                 }
                 $str=rtrim($str,",");
                 //Tools::dump($str);
@@ -184,7 +191,11 @@ class user extends Controller{
                         $value->sent="<span style='color:green;'>[已发货]</span>";
                 }
             }
-            $ask->aid=$_GET['id'];
+            $this->assign("allOrders",$allOrders);
+            //所有问答
+            $allAsks=$this->model->getAll("ask","where uid=".$data['id']." order by id desc");
+            $this->assign("allAsks",$allAsks);
+            /*$ask->aid=$_GET['id'];
             //$allAsks=$ask->getAllAskByAID();
             //Tools::dump($allAsks);
             //$this->smarty->assign("allAsks",$allAsks);

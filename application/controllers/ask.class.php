@@ -16,7 +16,8 @@ class ask extends Controller{
     public function detail($data=array()){
         if($data['id']){
             $oneAsk=$this->model->getOne("ask","where id=".$data['id']);
-            $responds=$this->model->getAll("ask","where pid=".$data['id']." order by id desc ");
+            $this->page($this->model->getAllTotal("ask","where pid=".$data['id']));
+            $responds=$this->model->getAll("ask","where pid=".$data['id']." order by id desc ",$this->model->limit);
             foreach ($responds as $key=>$value){
                 $oneUser=$this->model->getOne("user","where id=".$value->uid);
                 $value->uid=$oneUser[0]->username;

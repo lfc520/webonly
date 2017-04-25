@@ -47,9 +47,9 @@ $("#commentBtn").click(function(){
 					                    var str=eval(xhr3.responseText);
 					                    var content="";
 					                    for(i in str[0]){
-					                    		content+='<table class="table table-bordered table-striped table-hover">';
+					                    		content+='<table class="table table-bordered table-striped">';
 					                        content+="<tr>";
-					                        content+="<td rowspan='2' width=48 height=48><img style='width:48px;height:48px;' src='http://www.webonly.org/public/uploads/user/"+str[0][i].icon+"'></td><td>"+str[0][i].date+"&nbsp;<span class='text-danger'>"+str[0][i].username+"</span></td>";
+					                        content+="<td rowspan='2' width=48 height=48><img style='width:48px;height:48px;' src='http://www.webonly.org/public/uploads/user/"+str[0][i].icon+"'></td><td><span class='text-primary h4'>"+str[0][i].username+"</span>&nbsp;"+str[0][i].date+"</td>";
 					                        content+="</tr>";
 					                    		content+="<tr>";
 					                        content+="<td>"+str[0][i].content+"</td>";
@@ -90,9 +90,9 @@ $("#commentBtn").click(function(){
                     var str=eval(xhr.responseText);
                     var content="";
                     for(i in str[0]){
-                    		content+='<table class="table table-bordered table-striped table-hover">';
+                    		content+='<table class="table table-bordered table-striped">';
                         content+="<tr>";
-                        content+="<td rowspan='2' width=48 height=48><img style='width:48px;height:48px;' src='http://www.webonly.org/public/uploads/user/"+str[0][i].icon+"'></td><td>"+str[0][i].date+"&nbsp;<span class='text-danger'>"+str[0][i].username+"</span></td>";
+                        content+="<td rowspan='2' width=48 height=48><img style='width:48px;height:48px;' src='http://www.webonly.org/public/uploads/user/"+str[0][i].icon+"'></td><td><span class='text-primary h4'>"+str[0][i].username+"</span>&nbsp;"+str[0][i].date+"</td>";
                         content+="</tr>";
                     		content+="<tr>";
                         content+="<td>"+str[0][i].content+"</td>";

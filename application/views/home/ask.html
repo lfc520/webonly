@@ -18,6 +18,7 @@
 <script src="{$ROOT}/public/scripts/login.js"></script>
 <link href="{$ROOT}/public/styles/tools.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/ask.css" rel="stylesheet">
+<link href="{$ROOT}/public/styles/page.css" rel="stylesheet">
 <script src="{$ROOT}/public/scripts/ask.js"></script>
 
 </head>
@@ -29,7 +30,7 @@
 <div class="row">
 	<div class="col-md-9 askMain">
 	<dl>
-		<dt>{$oneAsk->topic}</dt>
+		<dt>{$oneAsk->topic}</dt><a href="/ask/respond/id/{$oneAsk->id}" class="askBtn" target="_blank">我来回复</a>
 		{if $responds}
 		{foreach $responds as $key=>$value}
 		<table class="table table-bordered table-striped table-hover">
@@ -55,6 +56,9 @@
 			<h1>Coming Soon!</h1>
 		</div>
 	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 page text-center" style="margin-top:5px;">{$page}</div>
 </div>
 {/if}
 {if $AllAsk}

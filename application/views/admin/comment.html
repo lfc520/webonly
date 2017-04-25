@@ -3,14 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <title>评论管理</title>
-<link href="public/styles/bootstrap.css" rel="stylesheet">
-<link href="public/styles/normalize.css" rel="stylesheet">
-<link href="public/styles/font-awesome.css" rel="stylesheet">
-<script src="public/scripts/jquery-1.10.2.js"></script>
-<script src="public/scripts/bootstrap.js"></script>
-<script src="public/scripts/admin.js"></script>
-<script src="public/scripts/tools.js"></script>
-<link href="public/styles/admin.css" rel="stylesheet">
+<link href="{$ROOT}/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="{$ROOT}/vendor/bootstrap/css/bootstrap-theme.css" rel="stylesheet">
+<link href="{$ROOT}/vendor/fontawesome/styles/font-awesome.css" rel="stylesheet">
+<script src="{$ROOT}/vendor/jquery/jquery-3.1.1.js"></script>
+<script src="{$ROOT}/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="{$ROOT}/public/scripts/admin.js"></script>
+<script src="{$ROOT}/public/scripts/redirect.js"></script>
+<link href="{$ROOT}/public/styles/admin.css" rel="stylesheet">
+<link href="{$ROOT}/public/styles/page.css" rel="stylesheet">
+<script src="{$ROOT}/public/scripts/preview.js"></script>
 </head>
 <body>
 <!--modal模态框开始  -->
@@ -39,32 +41,28 @@
 				<li class="active">显示评论</li>
 			</ul>
 		<table class="table table-bordered table-striped table-hover table-condensed">
-			<form action="?a=comment&action=deleteAll" method="post">
+			<form action="/comment/deleteAll" method="post">
 				<tr>
-					<td>编号</td>
 					<td>文章名</td>
 					<td>评论者</td>
 					<td>内容</td>
 					<td>审批</td>
 					<td>评论时间</td>
-					<td>操作</td>
 					<td><input type="checkbox" id="selectBar">全选</td>
 				</tr>
 				{if $data}
 				{foreach $data as $key=>$value}
 				<tr>
-					<td>{$key+$num}</td>
 					<td>{$value->title}</td>
 					<td>{$value->username}</td>
 					<td>{$value->content}</td>
 					<td>{$value->state}</td>
 					<td>{$value->date}</td>
-					<td><a href="?a=comment&action=delete&id={$value->id}" class="deleteBtn">删除</a></td>
 					<td><input type="checkbox" value="{$value->id}" name="selectAll[]"></td>
 				</tr>
 				{/foreach}
 				<tr>
-					<td colspan="8"><input type="submit" value="全删" class="btn btn-success pull-right" name="send"></td>
+					<td colspan="7"><input type="submit" value="多删" class="btn btn-success pull-right" name="send"></td>
 				</tr>
 				{else}
 				<tr><td colspan="8">暂无评论</td></tr>
@@ -73,7 +71,7 @@
 			</table>
 		</div>
 	</div>
-	<div class="row text-center"><dlv class="col-md-12">{$page}</dlv></div>
+	<div class="row text-center"><dlv class="col-md-12 page">{$page}</dlv></div>
 	{/if}
 </body>
 </html>

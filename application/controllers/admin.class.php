@@ -27,7 +27,8 @@ class admin extends Controller{
             //$this->dump($oneAdmin[0]);
             if($oneAdmin[0]){
                 $_SESSION['admin']=$oneAdmin[0];
-                $_SESSION['username']=$_POST['username'];
+                $oneLevel=$this->model->getOne("level","where id=".$oneAdmin[0]->level_id);
+                $_SESSION['admin']->level_name=$oneLevel[0]->name;
                 //$oneAdmin->updateLogin();
                 //var_dump($_SESSION);
                 $array=array(

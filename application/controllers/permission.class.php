@@ -34,6 +34,7 @@ class permission extends Controller{
         $this->view("admin/permission.html");
     }
     public function show(){
+        $this->checkPermission(9);
         $this->page($this->model->getAllTotal("permission"));
         $this->assign("data",$this->model->getAll("permission","order by id desc",$this->model->limit));
         $this->assign("show",true);

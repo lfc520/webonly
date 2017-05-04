@@ -25,11 +25,11 @@
 <div class="dropdown">
   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDivider" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     <span class="glyphicon glyphicon-user"></span>
-    {$smarty.session.username}
+    {$smarty.session.admin->username}
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider">
-    <li><a href="#">{$smarty.session.admin->name}</a></li>
+    <li><a href="#">{$smarty.session.admin->level_name}</a></li>
     <li role="separator" class="divider"></li>
 	<li><a href="#">{$smarty.session.admin->login_num+1}次登录</a></li>
     <li role="separator" class="divider"></li>

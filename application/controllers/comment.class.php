@@ -2,13 +2,7 @@
 class comment extends Controller{
     public function deleteAll(){
         if(isset($_POST['send'])){
-            $multiId=implode(",", $_POST['selectAll']);
-            //echo $multiId;
-            if($this->model->delete("comment","where id in (".$multiId.")")){
-                $this->redirect("多删成功",$_SERVER['HTTP_REFERER']);
-            }else{
-                $this->redirect("多删失败","",0);
-            }
+            $this->multiDelete("comment");
         }
         $this->assign("adminShow",true);
         $this->view("admin/comment.html");
@@ -17,6 +11,7 @@ class comment extends Controller{
         $this->setState($data,"comment", "admin/comment.html");
     }
     public function adminShow(){
+        $this->checkPermission(2);
         $this->page($this->model->getAllTotal("comment"));
         $data=$this->model->getAll("comment","order by id desc",$this->model->limit);
         foreach ($data as $value){

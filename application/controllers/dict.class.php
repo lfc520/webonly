@@ -89,6 +89,7 @@ class dict extends Controller{
         //Tools::dump($this->model->getSearchResult());
     }
     public function admin(){
+        $this->checkPermission(15);
         $this->page($this->model->getAllTotal("dict"));
         $this->assign('AllEntry',$this->model->getAll("dict","order by id desc",$this->model->limit));
         $this->assign("admin",true);

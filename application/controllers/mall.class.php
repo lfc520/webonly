@@ -1,6 +1,7 @@
 <?php
 class mall extends Controller{
     public function showCategory(){
+        $this->checkPermission(18);
         $this->page($this->model->getAllTotal('category'));
         $data=$this->model->getAll('category',"order by id desc",$this->model->limit);
         $this->assign("data",$data);
@@ -261,6 +262,7 @@ class mall extends Controller{
         $this->view("admin/mall.html");
     }
     public function showOrder(){
+        $this->checkPermission(18);
         $this->page($this->model->getAllTotal("orders"));
         $data=$this->model->getAll("orders","order by id desc",$this->model->limit);
         //$this->dump($data);
@@ -338,6 +340,7 @@ class mall extends Controller{
         header('Location:/mall/showCart');
     }
     public function showProduct(){
+        $this->checkPermission(18);
         $allCategory=$this->model->getAll("category");
         $categoryStr=null;
         foreach ($allCategory as $value){
@@ -392,6 +395,20 @@ class mall extends Controller{
             $value->attr=$attrStr;
         }
         $this->assign("allProducts",$allProducts);
+        $this->assign("showProduct",true);
+        $this->view("admin/mall.html");
+    }
+    public function deleteAllOrder(){
+        if(isset($_POST['send'])){
+            $this->multiDelete("orders");
+        }
+        $this->assign("showOrder",true);
+        $this->view("admin/mall.html");
+    }
+    public function deleteAll(){
+        if(isset($_POST['send'])){
+            $this->multiDelete("product");
+        }
         $this->assign("showProduct",true);
         $this->view("admin/mall.html");
     }

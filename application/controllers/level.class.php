@@ -55,6 +55,7 @@ class level extends Controller{
         $this->view("admin/level.html");
     }
     public function show(){
+        $this->checkPermission(10);
         $this->page($this->model->getAllTotal("level"));
         $data=$this->model->getAll("level","order by id desc",$this->model->limit);
         $this->assign("data",$data);

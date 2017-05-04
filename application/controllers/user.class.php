@@ -231,6 +231,7 @@ class user extends Controller{
         }
     }
     public function show(){
+        $this->checkPermission(12);
         $this->page($this->model->getAllTotal("user"));
         $data=$this->model->getAll("user","order by last_time desc",$this->model->limit);
         foreach ($data as $key=>$value){

@@ -189,6 +189,7 @@ class learning extends Controller{
         $this->view("admin/learning.html");
     }
     public function showCourse(){
+        $this->checkPermission(19);
         $this->page($this->model->getAllTotal("course"));
         $allCourse=$this->model->getAll("course","order by id desc",$this->model->limit);
         foreach ($allCourse as $key=>$value){
@@ -305,6 +306,7 @@ class learning extends Controller{
         $this->view("admin/learning.html");
     }
     public function showExam(){
+        $this->checkPermission(19);
         $AllCourse=$this->model->getAll("course");
         $courseStr=null;
         foreach ($AllCourse as $value){
@@ -354,6 +356,7 @@ class learning extends Controller{
         $this->view("admin/learning.html");
     }
     public function showJudge(){
+        $this->checkPermission(19);
         $allCourse=$this->model->getAll("course");
         $courseStr=null;
         foreach ($allCourse as $value){
@@ -461,6 +464,7 @@ class learning extends Controller{
         $this->view("admin/learning.html");
     }
     public function showChoice($data=array()){
+        $this->checkPermission(19);
         //$this->dump($_GET);
         $alllCourse=$this->model->getAll("course");
         $courseStr=null;

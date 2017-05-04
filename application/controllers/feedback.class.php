@@ -32,6 +32,7 @@ class feedback extends Controller{
         $this->setState($data,"feedback","admin/feedback.html");
     }
     public function admin(){
+        $this->checkPermission(16);
         $this->page($this->model->getAllTotal("feedback"));
         $AllFeedback=$this->model->getAll("feedback","order by id desc",$this->limit);
         //$this->dump($AllFeedback);

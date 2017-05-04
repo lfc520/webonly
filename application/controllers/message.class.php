@@ -93,6 +93,7 @@ class message extends Controller{
         $this->setState($data,"message", "admin/message.html");
     }
     public function show(){
+        $this->checkPermission(17);
         $this->page($this->model->getAllTotal("message"));
         $AllMsg=$this->model->getAll("message","order by id desc",$this->model->limit);
         //Tools::dump($AllMsg);

@@ -1,5 +1,8 @@
 <?php
 class article extends Controller{
+    /* public function __construct(){
+        $this->dump($_SESSION['admin']);
+    } */
     /*添加文章*/
     public function add(){
         //var_dump($_POST);
@@ -158,6 +161,12 @@ class article extends Controller{
         $this->view("admin/article.html");
     }
     public function show(){
+        //添加权限判断
+        $oneLevel=$this->model->getOne("level","where id=".$_SESSION['admin']->level_id);
+        if(!in_array(7, explode(",", $oneLevel[0]->pid))){
+            $this->view("admin/access_denied.html");
+            exit();
+        }
         $this->page($this->model->getAllTotal("article"));
         $data=$this->model->getAll("article","order by id desc",$this->model->limit);
         $this->assign("data",$data);

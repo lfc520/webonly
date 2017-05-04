@@ -6,6 +6,7 @@ class download extends Controller{
         $this->assign("frontNav",$frontNav);
     }
     public function topic(){
+        $this->checkPermission(14);
         $total=$this->model->getAllTotal("topic");
         $this->page($total);
         $data=$this->model->getAll("topic","order by id desc ",$this->model->limit);
@@ -69,6 +70,7 @@ class download extends Controller{
         $this->view("admin/download.html");
     }
     public function content(){
+        $this->checkPermission(14);
         $total=$this->model->getAllTotal("download");
         //$data=$this->model->getAllDownload();
         $this->page($total);

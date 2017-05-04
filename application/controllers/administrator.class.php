@@ -11,6 +11,13 @@ class administrator extends Controller{
         $this->assign("show",true);
         $this->view("admin/administrator.html");
     }
+    public function deleteAll(){
+        if(isset($_POST['send'])){
+            $this->multiDelete("administrator");
+        }
+        $this->assign("show",true);
+        $this->view("admin/administrator.html");
+    }
     public function update($data=array()){
         if(isset($_POST['send'])){
             if($_POST['pwd']!=$_POST['pwd2']){
@@ -40,11 +47,7 @@ class administrator extends Controller{
         $this->view("admin/administrator.html");
     }
     public function show(){
-        /* $permission=new permissionModel();
-        $data=$permission->getPID("管理员管理");
-        if(!strstr($_SESSION['oneAdmin']->permission,$data->id)){
-            exit("权限不够");
-        } */
+        $this->checkPermission(11);
         $AllLevel=$this->model->getAll("level");
         $levelStr=null;
         foreach ($AllLevel as $value){

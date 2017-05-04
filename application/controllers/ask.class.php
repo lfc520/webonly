@@ -98,12 +98,48 @@ class ask extends Controller{
         $this->assign("showTopic",true);
         $this->view("home/ask.html");
     }
+    public function deleteAll(){
+        if(isset($_POST['send'])){
+            $this->multiDelete("ask");
+        }
+        $this->assign("show",true);
+        $this->view("admin/ask.html");
+    }
     public function showTopic(){
 		$askLeaderboard=$this->model->getAll("ask","where pid=0 order by answerNum desc limit 0,7");
 		$this->assign("askLeaderboard",$askLeaderboard);
         $this->course();
         $this->assign("showTopic",true);
         $this->view("home/ask.html");
+    }
+    public function show(){
+        $this->checkPermission(20);
+        $AllCourse=$this->model->getAll("course");
+        $courseStr=null;
+        foreach ($AllCourse as $value){
+            $courseStr.=$value->id.",";
+        }
+        $courseStr=rtrim($courseStr,",");
+        //echo $levelStr;
+        if(empty($_GET['kind'])){
+            $kind=$courseStr;
+        }else{
+            $kind=$_GET['kind'];
+        }
+        $this->page($this->model->getAllTotal("ask"));
+        $AllAsk=$this->model->getAll("ask","order by id desc",$this->model->limit);
+        foreach ($AllAsk as $key=>$value){
+            $oneCourse=$this->model->getOne("course","where id=".$value->cid);
+            $value->courseName=$oneCourse[0]->name;
+            $value->answerNum=$this->model->getAllTotal("ask","where pid=".$value->id);
+            $oneUser=$this->model->getOne("user","where id=".$value->uid);
+            $value->username=$oneUser[0]->username;
+        }
+        $this->course($_GET['kind']);
+        //Tools::dump($AllAsk);
+        $this->assign("AllAsk",$AllAsk);
+        $this->assign("show",true);
+        $this->view("admin/ask.html");
     }
 }
 ?>

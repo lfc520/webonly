@@ -1,6 +1,7 @@
 <?php
 class nav extends Controller{
     public function showMainNav(){
+        $this->checkPermission(3);
         $this->page($this->model->getAllTotal("nav","where pid=0"));
         $data=$this->model->getAll("nav","where pid=0 order by sort asc ",$this->model->limit);
         foreach ($data as $value){

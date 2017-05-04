@@ -8,6 +8,13 @@ class Controller{
         $this->model=Model::getinstance();
         $this->setURL();
     }
+    protected function checkPermission($pid){
+        $oneLevel=$this->model->getOne("level","where id=".$_SESSION['admin']->level_id);
+        if(!in_array($pid, explode(",", $oneLevel[0]->pid))){
+            $this->view("admin/access_denied.html");
+            exit();
+        }
+    }
     /*检测登录状态*/
     protected function checkLogin($_data){
         if (!isset($_SESSION[$_data])){
@@ -168,6 +175,12 @@ class Controller{
         }
         return false;
     }
+    /**
+     * 切换状态
+     * @param array $data
+     * @param unknown $table
+     * @param unknown $template
+     * @param string $fieldName  */
     protected function setState($data=array(),$table,$template,$fieldName='state'){
         //$this->dump($data);
         if(isset($data['id'])){
@@ -188,6 +201,19 @@ class Controller{
             }
         }
         $this->view($template);
+    }
+    /**
+     * 多删
+     * @param string $table:表名
+     *   */
+    protected function multiDelete($table){
+        $multiId=implode(",", $_POST['selectAll']);
+        //echo $multiId;
+        if($this->model->delete($table,"where id in (".$multiId.")")){
+            $this->redirect("多删成功",$_SERVER['HTTP_REFERER']);
+        }else{
+            $this->redirect("多删失败","",0);
+        }
     }
 }
 ?>

@@ -286,18 +286,13 @@
 		</div>
 		<div class="col-md-4">
 			<table class="table table-striped table-hover table-condensed" style="border:1px solid #ddd">
-				<tr><th style="text-align:center;" colspan="3">最 新 问 答</th></tr>
+				<tr><th style="text-align:center;" colspan="3">热 门 问 答</th></tr>
 				{if $askLeaderboard}
 				{foreach $askLeaderboard as $key=>$value}
 				<tr>
-					<td>{$key+1}</td>
-					<td><a class='ask_title' href="/ask/detail/id/{$value->id}" target="_blank">{$value->topic|truncate:25:"..."}</a></td>
+					<td width=70>{$value->answerNum}&nbsp;回复</td>
+					<td><a class='ask_title' href="/ask/detail/id/{$value->id}" target="_blank">{$value->topic|truncate:21:"..."}</a></td>
 					<td>{$value->uid}</td>
-					<style>
-						.ask_title p{
-								margin:0;
-						}
-					</style>
 				</tr>
 				{/foreach}	
 				{else}	
@@ -313,8 +308,10 @@
 				</table>
 		</div>
 	</div>
-	{include file="home/footer.html"}
+	
 </div>
+
 </div>
+{include file="home/footer.html"}
 </body>
 </html>

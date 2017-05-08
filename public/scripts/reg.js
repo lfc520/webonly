@@ -89,8 +89,8 @@ $(function(){
 				$(".right div:eq(1) strong").html("密码强度中");
 	            break;
 	        case 1:
-	        		$(".right div:eq(1)").removeClass("alert-danger alert-warning").addClass("alert-success");
-				$(".right div:eq(1) span").removeClass("glyphicon-remove").addClass("glyphicon-ok");
+	        		$(".right div:eq(1)").removeClass("alert-warning alert-success").addClass("alert-danger");
+				$(".right div:eq(1) span").removeClass("glyphicon-ok").addClass("glyphicon-remove");
 				$(".right div:eq(1) strong").html("密码强度较高");
 	            break;
 	        case 0:

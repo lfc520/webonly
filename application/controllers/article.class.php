@@ -93,18 +93,21 @@ class article extends Controller{
         foreach ($allMainNav as $key=>$value){
             $str.="<optgroup label='".$value->name."'>";
             $subNav=$this->model->getAll("nav",'where id='.$value->id);
+            //$this->dump($subNav);
             foreach ($subNav as $k=>$v){  
+                //echo $v->id."::::".$nid."<br>";
+                //echo gettype((int)$v->id)."a<br>";
+                //echo gettype((int)$nid)."b<br>";
+                //echo (int)$nid==(int)$v->id."c<br>";
                 /*编辑修改,运用参数start*/
-                if ($nid==$v->id){ 
+                if ((int)$nid==(int)$v->id){ 
                     $selected="selected='selected'"; 
                 }else{
                     $selected="";
                 }
                 $str.="<option value='".$v->id." '".$selected.">".$v->name."</option>";
-    
             }
             $str.="</optgroup>";
-            //var_dump($value);
         }
         //$this->dump($str);
         $this->assign("nav",$str); 
@@ -160,15 +163,56 @@ class article extends Controller{
         $this->assign("update",true);
         $this->view("admin/article.html");
     }
-    public function show(){
-        //添加权限判断
-        $oneLevel=$this->model->getOne("level","where id=".$_SESSION['admin']->level_id);
-        if(!in_array(7, explode(",", $oneLevel[0]->pid))){
-            $this->view("admin/access_denied.html");
-            exit();
+    public function state($data=array()){
+        $this->setState($data,"article", "admin/article.html");
+    }
+    public function show($data=array()){
+        $this->checkPermission(7);
+        ////////
+        $alllNav=$this->model->getAll("nav");
+        $courseStr=null;
+        foreach ($alllNav as $value){
+            $courseStr.=$value->id.",";
         }
-        $this->page($this->model->getAllTotal("article"));
-        $data=$this->model->getAll("article","order by id desc",$this->model->limit);
+        $courseStr=rtrim($courseStr,",");
+        //echo $courseStr;
+        if(empty($_GET['kind'])){
+            $kind=$courseStr;
+        }else{
+            $kind=$_GET['kind'];
+        }
+        //$this->dump("kind的值"+$kind);
+        $this->nav($_GET['kind']);
+        //////
+        $this->page($this->model->getAllTotal("article","where nid in(".$kind.")"),8);
+        $data=$this->model->getAll("article","where nid in(".$kind.") order by id desc",$this->model->limit);
+        foreach ($data as $key=>$value){
+            //$oneNav=$nav->getOneNav($value->nid)[0];
+            $oneNav=$this->model->getOne("nav", "where id=".$value->nid);
+            $value->nid=$oneNav[0]->name;
+            /*文章属性*/
+            $attrStr=null;
+            foreach (explode(",",$value->attr) as $k=>$v){
+                switch ($v){
+                    case "1":$attrStr.="头条,";break;
+                    case "2":$attrStr.="推荐,";break;
+                    case "3":$attrStr.="热门,";break;
+                }
+            }
+            //echo rtrim($attrStr,",")."<br>";
+            $value->attr=rtrim($attrStr,",");
+            
+            //文章状态整理,重新赋值显示
+            switch ($value->state){
+                case 0:
+                    $value->state="<span style='color:red;'>[否]</span>
+							<a href='/article/state/flag/show/id/".$value->id."'>显示</a>";
+                    break;
+                case 1:
+                    $value->state="<span style='color:green;'>[是]</span>
+							<a href='/article/state/flag/hide/id/".$value->id."'>隐藏</a>	";
+            }
+        }
         $this->assign("data",$data);
         $this->assign("show",true);
         $this->view("admin/article.html");

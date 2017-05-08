@@ -1,5 +1,29 @@
 $(function(){	
 	$("#reportBar").click(function(){
+		if($("#username").val()==0){
+			$("#msgModal .msg").html("用户名不得为空");
+			$("#msgModal").modal("show");
+			setTimeout(function(){
+				$("#msgModal").modal("hide");
+			},2000);
+			return false;
+		}
+		if($("#contact").val()==0){
+			$("#msgModal .msg").html("联系方式不得为空");
+			$("#msgModal").modal("show");
+			setTimeout(function(){
+				$("#msgModal").modal("hide");
+			},2000);
+			return false;
+		}
+		if($("#reportMsg").val()==0){
+			$("#msgModal .msg").html("反馈内容不得为空");
+			$("#msgModal").modal("show");
+			setTimeout(function(){
+				$("#msgModal").modal("hide");
+			},2000);
+			return false;
+		}
 		$.ajax({
 			"type":"post",
 			"url":"/feedback/getFeedback",
@@ -11,7 +35,7 @@ $(function(){
 			success:function(response){
 				if(response=='ok'){
 					$("#reportModal").modal('hide');
-					$("#msgModal .msg").html("感谢您的反馈");
+					$("#msgModal .msg").html("感谢您的反馈!");
 					$("#msgModal").modal("show");
 					setTimeout(function(){
 						$("#msgModal").modal("hide");

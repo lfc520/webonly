@@ -28,6 +28,7 @@ $("#subBtn").click(function(){
 		});
 	});
 	$("#selectBar").click(function(){
+		//alert(3)
 		$("input[type=checkbox]:not(#selectBar)").prop("checked",$("#selectBar").prop("checked"));
 	});
 	/////////////////////

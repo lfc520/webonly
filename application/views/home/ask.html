@@ -7,6 +7,7 @@
 <link href="{$ROOT}/vendor/bootstrap/css/bootstrap-theme.css" rel="stylesheet">
 <script src="{$ROOT}/vendor/jquery/jquery-3.1.1.js"></script>
 <script src="{$ROOT}/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="{$ROOT}/vendor/ckeditor/ckeditor.js"></script>
 <script src="{$ROOT}/public/scripts/login.js"></script>
 <script src="{$ROOT}/public/scripts/home.js"></script>
 <script src="{$ROOT}/public/scripts/frontnav.js"></script>
@@ -29,8 +30,20 @@
 {if $detail}
 <div class="row">
 	<div class="col-md-9 askMain">
+	<ul class="oneAsk list-unstyled" >
+		<li class="h1 text-center">{$oneAsk->topic}</li>
+		<li class="text-center">
+			<img class="img-circle oneAskIcon" src="{$ROOT}public/uploads/user/{$oneAsk->icon}">&nbsp;&nbsp;{$oneAsk->uid}于{$oneAsk->date}发布,
+			{if $oneAsk->reponse_num}
+				{$oneAsk->reponse_num}条回复
+				{else}暂无回复
+			{/if}
+			</li>
+		<li>{$oneAsk->content}</li>
+	</ul>
 	<dl>
-		<dt>{$oneAsk->topic}</dt><a href="/ask/respond/id/{$oneAsk->id}" class="askBtn" target="_blank">我来回复</a>
+		<dt></dt><a href="/ask/respond/id/{$oneAsk->id}" class="askBtn" target="_blank">我来回复</a>
+		<dd style="text-align:left;"></dd>
 		{if $responds}
 		{foreach $responds as $key=>$value}
 		<table class="table table-bordered table-striped table-hover">
@@ -110,16 +123,18 @@
 		<input type="hidden" name="uid" id="uid">
 			<table>
 				<tr>
-					<td class="text-right">
+					<td colspan="2" class="text-center">
 						<select name="cid" class="input-sm" id="cid">
 							<option value="0" {$all}>所属主题</option>
 								{$course}
 						</select>(<span class="glyphicon glyphicon-asterisk" style="color:red"></span>)
 					</td>
 				</tr>
+				<td width=80 align="right">问题名称：</td>
+				<td><input type="text" class="form-control" name="topic" id="topic"></td>
 				<tr>
 					<td colspan="2">	
-						<script id="commentEditor" name="respond" style="width:100%"></script>						 					
+						<script id="commentEditor" name="content" style="width:100%"></script>						 					
 					</td>
 				</tr>
 				<tr><td><input type="submit" value="提交" name="send" class="btn btn-success" id="submitBtn"></td></tr>
@@ -127,22 +142,27 @@
 		</form>	
 	</div>
 	<div class="col-md-4">
-		<dl class="board">
-				<dt class="text-center">热门问答</dt>
+		<table class="table table-striped table-hover table-condensed" style="border:1px solid #ddd">
+				<tr><th style="text-align:center;" colspan="3">热 门 问 答</th></tr>
 				{if $askLeaderboard}
 				{foreach $askLeaderboard as $key=>$value}
-				<dd><span>{$key+1}</span><a href="?a=ask&action=detail&id={$value->id}">{$value->topic|truncate:25:"..."}</a></dd>
+				<tr>
+					<td width=70>{$value->answerNum}&nbsp;回复</td>
+					<td><a class='ask_title' href="/ask/detail/id/{$value->id}" target="_blank">{$value->topic|truncate:21:"..."}</a></td>
+					<td>{$value->uid}</td>
+				</tr>
 				{/foreach}	
-				{else}			
-				<dd><span>1</span><a href="javascript:void(0)">最佳前端入门方法</a></dd>
-				<dd class="bg-gray"><span>2</span><a href="javascript:void(0)">CSS权威指南如何？</a></dd>
-				<dd><span>3</span><a href="javascript:void(0)">JavaScript红宝书在哪儿有卖？</a></dd>
-				<dd class="bg-gray"><span>4</span><a href="javascript:void(0)">锋利的jQuery锋利在哪儿？</a></dd>
-				<dd><span>5</span><a href="javascript:void(0)">PHP核心模块这边书有价值吗？</a></dd>
-				<dd class="bg-gray"><span>6</span><a href="javascript:void(0)">PHP设计模式的低劣之处</a></dd>
-				<dd><span>7</span><a href="javascript:void(0)">程序员修炼之道！</a></dd>
+				{else}	
+				<tr><td>1</td><td><a href="javascript:void(0)">最佳前端入门方法</a></td><td>tom</td></tr>
+				<tr><td>2</td><td><a href="javascript:void(0)">CSS权威指南如何？</a></td><td>tom</td></tr>
+				<tr><td>3</td><td><a href="javascript:void(0)">JavaScript红宝书在哪儿有卖？</a></td><td>tom</td></tr>
+				<tr><td>4</td><td><a href="javascript:void(0)">锋利的jQuery锋利在哪儿？</a></td><td>tom</td></tr>
+				<tr><td>5</td><td><a href="javascript:void(0)">PHP核心模块这边书有价值吗？</a></td><td>tom</td></tr>
+				<tr><td>6</td><td><a href="javascript:void(0)">PHP设计模式的低劣之处</a></td><td>tom</td></tr>
+				<tr><td>7</td><td><a href="javascript:void(0)">程序员修炼之道！</a></td><td>tom</td></tr>
+				
 				{/if}
-		</dl>
+				</table>
 	</div>
 </div>
 {/if}
@@ -162,32 +182,37 @@
 						</tr>
 						<tr>
 							<td>
-							<textarea rows="15" cols="150" name="respond" class="form-control"></textarea>	
-							<!-- <script id="respond" name="respond" style="width:100%"></script>	 -->			
+							<textarea rows="15" cols="150" name="respond" id="respond" class="form-control"></textarea>	
+							<script src="{$ROOT}/public/scripts/myckeditor.js"></script>
 							</td>
 						</tr>
-						<tr><td><input type="submit" value="提交" name="send" class="btn btn-success" id="submitBtn"></td></tr>
+						<tr><td><input type="submit" value="提交" name="send" class="btn btn-success" id="respondBtn"></td></tr>
 					</form>
 					</table>					
 					</div>
 	</div>
 	<div class="col-md-4">
-		<dl class="board">
-				<dt class="text-center">热门问答</dt>
+		<table class="table table-striped table-hover table-condensed" style="border:1px solid #ddd">
+				<tr><th style="text-align:center;" colspan="3">热 门 问 答</th></tr>
 				{if $askLeaderboard}
 				{foreach $askLeaderboard as $key=>$value}
-				<dd><span>{$key+1}</span><a href="?a=ask&action=detail&id={$value->id}">{$value->topic|truncate:25:"..."}</a></dd>
+				<tr>
+					<td width=70>{$value->answerNum}&nbsp;回复</td>
+					<td><a class='ask_title' href="/ask/detail/id/{$value->id}" target="_blank">{$value->topic|truncate:21:"..."}</a></td>
+					<td>{$value->uid}</td>
+				</tr>
 				{/foreach}	
-				{else}			
-				<dd><span>1</span><a href="javascript:void(0)">最佳前端入门方法</a></dd>
-				<dd class="bg-gray"><span>2</span><a href="javascript:void(0)">CSS权威指南如何？</a></dd>
-				<dd><span>3</span><a href="javascript:void(0)">JavaScript红宝书在哪儿有卖？</a></dd>
-				<dd class="bg-gray"><span>4</span><a href="javascript:void(0)">锋利的jQuery锋利在哪儿？</a></dd>
-				<dd><span>5</span><a href="javascript:void(0)">PHP核心模块这边书有价值吗？</a></dd>
-				<dd class="bg-gray"><span>6</span><a href="javascript:void(0)">PHP设计模式的低劣之处</a></dd>
-				<dd><span>7</span><a href="javascript:void(0)">程序员修炼之道！</a></dd>
+				{else}	
+				<tr><td>1</td><td><a href="javascript:void(0)">最佳前端入门方法</a></td><td>tom</td></tr>
+				<tr><td>2</td><td><a href="javascript:void(0)">CSS权威指南如何？</a></td><td>tom</td></tr>
+				<tr><td>3</td><td><a href="javascript:void(0)">JavaScript红宝书在哪儿有卖？</a></td><td>tom</td></tr>
+				<tr><td>4</td><td><a href="javascript:void(0)">锋利的jQuery锋利在哪儿？</a></td><td>tom</td></tr>
+				<tr><td>5</td><td><a href="javascript:void(0)">PHP核心模块这边书有价值吗？</a></td><td>tom</td></tr>
+				<tr><td>6</td><td><a href="javascript:void(0)">PHP设计模式的低劣之处</a></td><td>tom</td></tr>
+				<tr><td>7</td><td><a href="javascript:void(0)">程序员修炼之道！</a></td><td>tom</td></tr>
+				
 				{/if}
-		</dl>
+				</table>
 	</div>
 </div>
 {/if}

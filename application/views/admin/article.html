@@ -7,9 +7,8 @@
 	<link href="{$ROOT}/vendor/bootstrap/css/bootstrap-theme.css" rel="stylesheet">
 	<script src="{$ROOT}/vendor/jquery/jquery-3.1.1.js"></script>
 	<script src="{$ROOT}/vendor/bootstrap/js/bootstrap.js"></script>
-	<script src="public/scripts/admin.js"></script>
+	<script src="{$ROOT}/public/scripts/admin.js"></script>
 	<script src="{$ROOT}/public/scripts/redirect.js"></script>
-	<script src="{$ROOT}/public/scripts/download.js"></script>
 	<script src="{$ROOT}/public/scripts/preview.js"></script>
 	<link href="{$ROOT}/public/styles/admin.css" rel="stylesheet">
 	<link href="{$ROOT}/public/styles/page.css" rel="stylesheet">
@@ -108,7 +107,7 @@
         <ul class="breadcrumb">
             <li><a href="/admin/welcome">后台首页</a></li>
             <li><a href="/article/add" title='添加文章'><i class="glyphicon glyphicon-plus"></i></a></li>
-            <li class="active">文章导航</li>
+            <li class="active">所有文章</li>
         </ul>
     </div>
 </div>
@@ -118,7 +117,7 @@
             <table class="table table-bordered table-hover table-striped">
                 <tr>
                     <td>名称</td>
-                    <td>属性</td>
+                    <td width=82>属性</td>
                     <td>栏目</td>
                     <td>tag</td>
                     <td>作者</td>
@@ -127,7 +126,7 @@
                     <td>导语</td>
                     <td>内容</td>
                     <td>操作</td>
-                    <td><input type="checkbox" id="choiceAll">单选/反选</td>
+                    <td><input type="checkbox" id="selectBar"></td>
                 </tr>
                 {if $data}
                 {foreach $data as $key=>$value}
@@ -143,8 +142,6 @@
                     <td>{$value->content|truncate:"4":"..."}</td>          <!--$str|truncate:"":"..."-->
                     <td>
                         <a href="/article/update/id/{$value->id}">修改</a>
-                          /
-                        <a href="/article/delete/id/{$value->id}">删除</a>
                     </td>
                     <td><input type="checkbox" value="{$value->id}" name="selectAll[]"></td>
                 </tr>
@@ -152,7 +149,7 @@
                 <tr>
                     <td colspan="12" class="text-right">
                         <!--<a href="?a=ad&action=add" class="btn btn-primary">添加广告</a>-->
-                        <input type="submit" value="全删" class="btn btn-success pull-right" name="send">
+                        <input type="submit" value="多删" class="btn btn-success pull-right" name="send">
                     </td>
                 </tr>
                 {else}
@@ -164,6 +161,13 @@
 </div>
 <div class="row">
     <div class="col-md-12 text-center">
+    		<form action="" method="get" style="display: inline-block">
+				<input type="hidden" name="action" value="showChoice"> <input
+					type="hidden" name="a" value="learning"> 
+					<select name="kind" class="input-sm">
+					<option value="0" {$all}>所有导航</option> {$nav}
+				</select> <input type="submit" name="send" value="提交" class="btn btn-success">
+			</form>
         <div class="page">{$page}</div>
     </div>
 </div>

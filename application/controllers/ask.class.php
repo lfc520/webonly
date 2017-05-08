@@ -16,6 +16,11 @@ class ask extends Controller{
     public function detail($data=array()){
         if($data['id']){
             $oneAsk=$this->model->getOne("ask","where id=".$data['id']);
+            $oneAskUser=$this->model->getOne("user","where id=".$oneAsk[0]->uid);
+            $oneAsk[0]->uid=$oneAskUser[0]->username;
+            $oneAsk[0]->icon=$oneAskUser[0]->icon;
+            $oneAsk[0]->reponse_num=$this->model->getAllTotal("ask","where pid=".$oneAsk[0]->id);
+            //$this->dump($oneAsk);
             $this->page($this->model->getAllTotal("ask","where pid=".$data['id']));
             $responds=$this->model->getAll("ask","where pid=".$data['id']." order by id desc ",$this->model->limit);
             foreach ($responds as $key=>$value){
@@ -64,13 +69,13 @@ class ask extends Controller{
              'date'=>date("Y-m-d H:i:s")
              );
             if($this->model->add("ask",$array)){
+                $this->model->exec("update ask set answerNum=answerNum+1 where id=".$_POST['id']);
                 $this->redirect("回复成功","/home/index");
             }else{
                 $this->redirect("回复失败","/home/index",0);
             }
         }
-        $askLeaderboard=$this->model->getAll("ask","where pid=0 order by answerNum desc limit 0,7");
-		$this->assign("askLeaderboard",$askLeaderboard);
+        $this->hotAsk();
         $this->assign("id",$data['id']);
         $oneTopic=$this->model->getOne("ask","where id=".$data['id']);
         $this->assign("oneTopic",$oneTopic[0]);
@@ -79,11 +84,21 @@ class ask extends Controller{
         $this->assign("respond",true);
         $this->view("home/ask.html");
     }
+    private function hotAsk(){
+        //热门回答
+        $askLeaderboard=$this->model->getAll("ask","where pid=0 order by answerNum desc limit 0,7");
+        foreach ($askLeaderboard as $k=>$v){
+            $oneUser=$this->model->getOne("user","where id=".$v->uid);
+            $v->uid=$oneUser[0]->username;
+        }
+        $this->assign("askLeaderboard",$askLeaderboard);
+    }
     public function addTopic(){
         if(isset($_POST['send'])){
             //$this->dump($_POST);
             $array=array(
-                'topic'=>$_POST['respond'],
+                'topic'=>$_POST['topic'],
+                'content'=>$_POST['content'],
                 'uid'=>$_POST['uid'],
                 'date'=>date('Y-m-d H:i:s'),
                 'pid'=>0,
@@ -106,8 +121,7 @@ class ask extends Controller{
         $this->view("admin/ask.html");
     }
     public function showTopic(){
-		$askLeaderboard=$this->model->getAll("ask","where pid=0 order by answerNum desc limit 0,7");
-		$this->assign("askLeaderboard",$askLeaderboard);
+		$this->hotAsk();
         $this->course();
         $this->assign("showTopic",true);
         $this->view("home/ask.html");

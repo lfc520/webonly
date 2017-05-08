@@ -12,10 +12,10 @@ class home extends Controller{
             //$this->assign(,$value->reponse_num);
         }
         $this->assign("AllAsk",$AllAsk);
-        $askLeaderboard=$this->model->getAll("ask","where pid=0 order by id desc limit 0,7");
+        //热门回答
+        $askLeaderboard=$this->model->getAll("ask","where pid=0 order by answerNum desc limit 0,7");
         foreach ($askLeaderboard as $k=>$v){
             $oneUser=$this->model->getOne("user","where id=".$v->uid);
-            $v->topic=strip_tags($v->topic);
             $v->uid=$oneUser[0]->username;
         }
         $this->assign("askLeaderboard",$askLeaderboard);

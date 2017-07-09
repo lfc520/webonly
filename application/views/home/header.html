@@ -10,7 +10,7 @@
 			{if $value->hasChild eq 0}
 			<dd><a href="{$value->url}" target="_blank" target="_blank">{$value->name}</a></dd>
 			{else}
-			<dd><a href="/subnav/show/id/{$value->id}" target="_blank">{$value->name}</a></dd>
+			<dd><a href="/nav/subnav/id/{$value->id}" target="_blank">{$value->name}</a></dd>
 			{/if} 
 			<!-- <dd><a href="?a=subnav&action=show&id={$value->id}" target="_blank">{$value->name}</a></dd> -->
 			{/foreach}

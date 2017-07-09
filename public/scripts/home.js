@@ -46,15 +46,26 @@ $(function(){
 			}
 		});
 	});
-	$(".takeTest").click(function(){
-		if(!sessionStorage.getItem("username")){
-			$("#msgModal .msg").html("请先登录");
-			$("#msgModal").modal("show");
-			setTimeout(function(){
-				$("#msgModal").modal("hide");
-			},2000);
+	$(".takeTest").each(function(index){
+		$(this).click(function(){
+			if(!sessionStorage.getItem("username")){
+				$("#msgModal .msg").html("请先登录");
+				$("#msgModal").modal("show");
+				setTimeout(function(){
+					$("#msgModal").modal("hide");
+				},2000);
+				return false;
+			}
+			$("#regulation").modal("show");
+			//alert($(".regulation").eq(index).html());
+			$(".regulationContent").html($(".regulation").eq(index).html()); 
+			$(".proceedTest").attr("href",$(this).attr("href"));
 			return false;
-		}
+		});
+	});
+	
+	$(".proceedTest").click(function(){
+		$("#regulation").modal("hide");
 	});
 	$(".askBtn").click(function(){
 		if(!sessionStorage.getItem("username")){
@@ -79,6 +90,7 @@ $(function(){
 		});
 	});
 	$("#downloadBtn").click(function(){
+		$("#downloadModal").modal("hide");
 		//alert($(this).attr("info"));
 		if(sessionStorage.getItem("username")){
 			$.ajax({

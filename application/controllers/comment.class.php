@@ -50,6 +50,38 @@ class comment extends Controller{
             echo "failed";
         }
     }
+    public function addProductComment($data=array()){
+        //$this->dump($_POST);
+        $array=array(
+            'state'=>1,
+            'uid'=>$_POST['uid'],
+            'cid'=>$_POST['cid'],
+            'content'=>$_POST['content'],
+            'date'=>date("Y-m-d H:i:s")
+        );
+        $result=$this->model->add("comment", $array);
+        if($result){
+            echo "ok";
+        }else{
+            echo "failed";
+        }
+    }
+    public function getAllProductComment(){
+        //$this->dump($_GET);
+        $total=$this->model->getAllTotal("comment","where state=1 and cid=".$_GET['cid']);
+        $page=new Ajax_Page($total,5);
+        $allComment=$this->model->getAll("comment","where state=1 and cid=".$_GET['cid']." order by id desc ".$page->limit);
+        foreach($allComment as $key=>$value){
+            $oneUser=$this->model->getOne("user", "where id=".$value->uid);
+            $value->icon=$oneUser[0]->icon;
+            $value->username=$oneUser[0]->username;
+        }
+        //$this->dump($allComment);
+        $temp=array();
+        $temp[0]=$allComment;
+        $temp[1]=$page->display(array(0,1,2,3,4));
+        echo json_encode($temp);
+    }
     public function getAll(){
         //$this->dump($_GET);
         $total=$this->model->getAllTotal("comment","where state=1 and aid=".$_GET['aid']);

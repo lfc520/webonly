@@ -48,6 +48,7 @@ class home extends Controller{
         $this->assign("frontNav",$frontNav);
         //热门商品
 		$HotProducts=$this->model->getAll("product","where state=1 order by Rand() limit 3");
+		//$this->dump($HotProducts);
 		$this->assign("productRecommend",$this->model->getAll("product","where attr like '%1%' and state=1 order by id desc limit 6"));
 		$this->assign("allProducts",$HotProducts);
         $this->view("home/home.html");

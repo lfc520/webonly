@@ -15,45 +15,61 @@
 <link href="{$ROOT}/public/styles/learning.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/page.css" rel="stylesheet">
 <script src="{$ROOT}/public/scripts/preview.js"></script>
+<script src="{$ROOT}/vendor/ueditor/ueditor.config.js"></script>
+<script src="{$ROOT}/vendor/ueditor/ueditor.all.js"></script>
 </head>
 <body>
-	{include file="admin/common.html"} {if $showCourse}
+	{include file="admin/common.html"} 
+	{if $showCourse}
 	<div class="row">
 		<div class="col-md-12">
 			<ul class="breadcrumb">
-				<li><a href='?a=index&action=welcome' target="main">后台首页</a></li>
-				<li><a href='?a=learning&action=showCourse'>试卷管理</a></li>
+				<li><a href='/admin/welcome' target="main">后台首页</a></li>
+				<li><a href='/learning/showCourse'>试卷管理</a></li>
 				<li class="active">显示试卷</li>
 				<li><a href="/learning/addCourse" title='添加试卷'><i
 						class="fa fa-plus-circle"></i></a></li>
 			</ul>
+			<form action="/learning/deleteAllCourse" method="post">
 			<table
 				class="table table-bordered table-striped table-hover table-condensed alllevel">
 				<tr>
-					<td>课程名称</td>
-					<td>试卷描述</td>
+					<td>名称</td>
+					<td width=180>描述</td>
 					<td>显示|隐藏</td>
 					<td>试卷时长</td>
 					<td>操作</td>
-					<td>试卷创建日期</td>
+					<td>考试须知</td>
+					<td>日期</td>
+					<td><input type="checkbox" id="selectBar"></td>
 				</tr>
 				{if $data} {foreach $data as $key=>$value}
 				<tr>
 					<td>{$value->name}</td>
-					<td>{$value->description}</td>
+					<td>{$value->description|truncate:12:"..."}</td>
 					<td>{$value->state}</td>
 					<td id="totalTime">{$value->totalTime}分钟</td>
 					<td><a href="/learning/updateCourse/id/{$value->id}">修改</a>| <a
 						href="/learning/deleteCourse/id/{$value->id}" class="deleteBtn">删除</a>
 					</td>
+					<td>{$value->regulation|truncate:12:"..."}</td>
 					<td>{$value->date}</td>
+					<td><input type="checkbox" value="{$value->id}" name="selectAll[]"></td>
 				</tr>
-				{/foreach} {else}
+				{/foreach} 
+				<tr>
+                    <td colspan="12" class="text-right">
+                        <!--<a href="?a=ad&action=add" class="btn btn-primary">添加广告</a>-->
+                        <input type="submit" value="多删" class="btn btn-success pull-right" name="send">
+                    </td>
+                </tr>
+				{else}
 				<tr>
 					<td colspan="5">暂无数据</td>
 				</tr>
 				{/if}
 			</table>
+			</form>
 		</div>
 	</div>
 	<div class="row">
@@ -63,13 +79,13 @@
 	<div class="row">
 		<div class="col-md-12">
 			<ul class="breadcrumb">
-				<li><a href='?a=index&action=welcome' target="main">后台首页</a></li>
-				<li><a href='?a=level&action=showCourse'>试卷管理</a></li>
+				<li><a href='/admin/welcome' target="main">后台首页</a></li>
+				<li><a href='/learning/showCourse'>试卷管理</a></li>
 				<li class="active">添加试卷</li>
 			</ul>
+			<form action="" method="post" enctype="multipart/form-data">
 			<table
 				class="table table-bordered table-striped table-hover table-condensed">
-				<form action="" method="post" enctype="multipart/form-data">
 					<tr>
 						<td class="text-right" width=100>试卷名称</td>
 						<td><input type="text" name="name" class="form-control"></td>
@@ -85,7 +101,7 @@
 					</tr>
 					<tr>
 						<td class="text-right">缩略图预览</td>
-						<td><img src="{$ROOT}/public/images/default.jpg"
+						<td><img src="{$ROOT}public/images/default.jpg"
 							width="50px" height="50px" class="img-circle" alt=""
 							id="preview"></td>
 					</tr>
@@ -93,15 +109,23 @@
 						<td class="text-right">试卷时长</td>
 						<td><input type="text" name="totalTime" value="50" style="width:80px;">分钟</td>
 					</tr>
+					<tr>
+						<td class="text-right">考试须知</td>
+						<td>
+						<script id="regulation" type="text/plain" style="width: 100%"
+							name="regulation"></script>
+						</td>
+					</tr>
 					<tr class="text-center">
 						<td colspan="2"><input type="submit" value="提交"
 							class="btn btn-success" name="send"></td>
 					</tr>
-				</form>
 			</table>
+			</form>
 		</div>
 	</div>
-	{/if} {if $updateCourse}
+	{/if} 
+	{if $updateCourse}
 	<div class="row">
 		<div class="col-md-12">
 			<ul class="breadcrumb">
@@ -109,9 +133,10 @@
 				<li><a href='learning/showCourse'>课程管理</a></li>
 				<li class="active">修改课程</li>
 			</ul>
+			<form action="" method="post" enctype="multipart/form-data">
 			<table
 				class="table table-bordered table-striped table-hover table-condensed">
-				<form action="" method="post" enctype="multipart/form-data">
+				
 					<input type="hidden" name="id" value="{$oneCourse->id}"> <input
 						type="hidden" name="thumbnail2" value="{$oneCourse->thumbnail}">
 					<tr>
@@ -139,15 +164,23 @@
 						<td class="text-right">试卷时长</td>
 						<td><input type="text" name="totalTime" value="{$oneCourse->totalTime}" style="width:80px;">分钟</td>
 					</tr>
+					<tr>
+						<td width=90 class="text-right">考试须知</td>
+						<td>
+						<script id="regulation" type="text/plain" style="width: 100%"
+							name="regulation">{$oneCourse->regulation}</script>
+						</td>
+					</tr>
 					<tr class="text-center">
 						<td colspan="2"><input type="submit" value="提交"
 							class="btn btn-success" name="send"></td>
 					</tr>
-				</form>
 			</table>
+			</form>
 		</div>
 	</div>
-	{/if} {if $detailChoice}
+	{/if} 
+	{if $detailChoice}
 	<div class="row">
 		<div class="col-md-12">
 			<ul class="breadcrumb">
@@ -168,8 +201,7 @@
 				</tr>
 				<tr>
 					<td class="text-right" style="width: 80px;">问题</td>
-					<td><script id="editor" type="text/plain" style="width: 100%"
-							name="question">{$oneChoice->question}</script></td>
+					<td>{$oneChoice->question}</td>
 				</tr>
 				<tr>
 					<td class="text-right">答案A</td>
@@ -193,8 +225,7 @@
 				</tr>
 				<tr>
 					<td class="text-right">解答</td>
-					<td><script id="editor2" type="text/plain" style="width: 100%"
-							name="tips">{$oneChoice->tips}</script></td>
+					<td>{$oneChoice->tips}</td>
 				</tr>
 				<tr>
 					<td class="text-right">参加者</td>
@@ -203,11 +234,11 @@
 				<tr class="text-center">
 					<td colspan="2"><a href="{$back}" class="btn btn-success" name="send">返回</a></td>
 				</tr>
-				</form>
 			</table>
 		</div>
 	</div>
-	{/if} {if $showChoice}
+	{/if} 
+	{if $showChoice}
 	<div class="row">
 		<div class="col-xs-12">
 			<ul class="breadcrumb">
@@ -305,7 +336,7 @@
 				<div class="form-group">
 					<label class="col-sm-1 control-label">问题：</label>
 					<div class="col-sm-11">
-						<script id="editor" type="text/plain" style="width: 100%"
+							<script id="regulation" type="text/plain" style="width: 100%"
 							name="question"></script>
 					</div>
 				</div>
@@ -374,78 +405,76 @@
 				<li class="active">修改选择题</li>
 			</ul>
 			<form method="post" action="" class="form-horizontal">
-				<div class="form-group">
-					<label class="col-sm-1 control-label">课程：</label>
-					<div class="col-sm-11">
-						<select class="input-sm" name="course" id="course">
+			<table class="table table-bordered table-striped table-hover table-condensed">
+				<tr>
+					<td width=90 class="text-right">课程</td>
+					<td><select class="input-sm" name="course" id="course">
 							<option value="0">选择一门课程</option>{$course}
 						</select>(<span class="glyphicon glyphicon-asterisk" style="color: red;"></span>)
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-1 control-label">问题：</label>
-					<div class="col-sm-11">
-						<script id="editor" type="text/plain"
-							style="width: 100%; height: 380px;" name="question">{$oneChoice->question}</script>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-1 control-label">选项A：</label>
-					<div class="col-sm-11">
-						<input name="choice_a" type="text" class="form-control"
+					</td>
+				</tr>
+				<tr>
+					<td>问题</td>
+					<td>
+					<script id="regulation" type="text/plain" style="width: 100%"
+							name="question">{$oneChoice->question}</script>
+					</td>
+				</tr>
+				<tr>
+					<td>选项A</td>
+					<td>
+					<input name="choice_a" type="text" class="form-control"
 							value="{$oneChoice->a}" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-1 control-label">选项B：</label>
-					<div class="col-sm-11">
-						<input name="choice_b" type="text" class="form-control"
+					</td>
+				</tr>
+				<tr>
+					<td>选项B</td>
+					<td>
+					<input name="choice_b" type="text" class="form-control"
 							value="{$oneChoice->b}" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-1 control-label">选项C：</label>
-					<div class="col-sm-11">
-						<input name="choice_c" type="text" class="form-control"
+					</td>
+				</tr>
+				<tr>
+					<td>选项C</td>
+					<td>
+					<input name="choice_c" type="text" class="form-control"
 							value="{$oneChoice->c}" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-1 control-label">选项D：</label>
-					<div class="col-sm-11">
-						<input name="choice_d" type="text" class="form-control"
+					</td>
+				</tr>
+				<tr>
+					<td>选项D</td>
+					<td>
+					<input name="choice_d" type="text" class="form-control"
 							value="{$oneChoice->d}" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-1 control-label">正确答案：</label>
-					<div class="col-sm-11">
-						<input name="answer" type="radio" value="A" id="a" {$A}/> <label
-							for="a">A:</label> <input name="answer" type="radio" value="B"
-							id="b" {$B}/> <label for="b">B:</label> <input name="answer"
-							type="radio" value="C" id="c" {$C}/> <label for="c">C:</label> <input
-							name="answer" type="radio" value="D" id="d" {$D}/> <label
-							for="d">D:</label>
-						<!--测试 -->
-						<div class="alert alert-danger" style="display: none;">答案不能为空</div>
-						<!--测试   -->
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-1 control-label">提示：</label>
-					<div class="col-sm-11">
-						<script name="tips" id="editor2" type="text/plain"
-							style="width: 100%">{$oneChoice->tips}</script>
-					</div>
-				</div>
-
-				<div class="form-group">
-					<label class="col-sm-1 control-label"></label>
-					<div class="col-sm-11">
-						<input type="submit" name="send" value="修改试题"
+					</td>
+				</tr>
+				<tr>
+				<td>正确答案</td>
+				<td>
+					<input name="answer" type="radio" value="A" id="a" {$A}/> 
+					<label for="a">A:</label> 
+					<input name="answer" type="radio" value="B" id="b" {$B}/> 
+					<label for="b">B:</label> 
+					<input name="answer" type="radio" value="C" id="c" {$C}/> 
+					<label for="c">C:</label> 
+					<input name="answer" type="radio" value="D" id="d" {$D}/> 
+					<label for="d">D:</label>
+					<div class="alert alert-danger" style="display: none;">答案不能为空</div>
+				</td>
+				</tr>
+				<tr>
+				<td>提示</td>
+				<td><script name="tips" id="editor2" type="text/plain"
+							style="width: 100%">{$oneChoice->tips}</script></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+					<input type="submit" name="send" value="修改试题"
 							class="btn btn-success" id="submitBtn" />
-					</div>
-				</div>
+					</td>
+				</tr>
+			</table>
 			</form>
 		</div>
 	</div>
@@ -512,12 +541,12 @@
 						<input type="submit" value="submit" style="display:none;" id="searchBtn">
 					</form>
 				</ul>
+				<form action="" method="post">
 			<table class="table table-bordered table-striped table-hover table-condensed">
-			<form action="" method="post">
 				<tr>
-					<td width=300>问题</td>
-					<td width=80>正确答案</td>
-					<td>解答</td>
+					<td >问题</td>
+					<td width=50>正确答案</td>
+					<td width=100>解答</td>
 					<td width=80>所属课程</td>
 					<td width=80>操作</td>
 					<td width=50><input type="checkbox" id="selectBar">全选</td>
@@ -543,8 +572,8 @@
 				{else}
 				<tr><td colspan="10">暂无判断题</td></tr>
 				{/if}
-			</form>
 			</table>
+			</form>
 		</div>
 	</div>
 	<div class="row">
@@ -583,7 +612,7 @@
 			<tr>
 				<td class="text-right">问题</td>
 				<td>
-					<script name="question" id="editor" type="text/plain"
+					<script name="question" id="regulation" type="text/plain"
 							style="width: 100%"></script>
 				</td>
 			</tr>
@@ -609,7 +638,6 @@
 				<input type="submit" name='send' value="添加" class="btn btn-primary">
 			</td>
 			</tr>
-			
 		</table>
 		</form>
 		</div>
@@ -637,7 +665,7 @@
 			<tr>
 				<td class="text-right">问题</td>
 				<td>
-					<script name="question" id="editor" type="text/plain"
+					<script name="question" id="regulation" type="text/plain"
 							style="width: 100%">{$oneJudge->question}</script>
 				</td>
 			</tr>
@@ -688,9 +716,7 @@
 			</tr>
 			<tr>
 				<td class="text-right">问题</td>
-				<td>
-					<script name="question" id="editor" type="text/plain"
-							style="width: 100%">{$oneJudge->question}</script>
+				<td>{$oneJudge->question}
 				</td>
 			</tr>
 			<tr><td class="text-right">选项</td><td>选项A： 正确；选项B： 错误</td></tr>
@@ -703,11 +729,8 @@
 			</tr>
 			<tr>
 				<td class="text-right" style="width:85px;">解答</td>
-				<td>
-					<script id="editor2" type="text/plain" style="width:100%">{$oneJudge->tips}</script>
-				</td>
+				<td>{$oneJudge->tips}</td>
 			</tr>
-			
 			<tr class="text-center"><td colspan="2"><a href="{$back}" class="btn btn-success" name="send">返回</a></td></tr>
 			
 		</table>
@@ -771,11 +794,13 @@
 		{$page}</div>
 	</div>
 {/if}
-	<script src="{$ROOT}/vendor/ueditor/ueditor.config.js"></script>
-	<script src="{$ROOT}/vendor/ueditor/ueditor.all.js"></script>
+	
 	<script>
 		var ue = UE.getEditor("editor");
 		var ue2 = UE.getEditor("editor2");
+		var regulation = UE.getEditor("regulation");
+		/* var regulation2 = UE.getEditor("regulation2"); */
+		/* var regulation3 = UE.getEditor("regulation3"); */
 	</script>
 </body>
 </html>

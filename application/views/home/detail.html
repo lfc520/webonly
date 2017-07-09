@@ -11,17 +11,15 @@
 <script src="{$ROOT}/public/scripts/login.js"></script>
 <script src="{$ROOT}/public/scripts/home.js"></script>
 <script src="{$ROOT}/public/scripts/frontnav.js"></script>
+<link href="{$ROOT}/public/styles/home.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/member.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/common.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/header.css" rel="stylesheet">
-<link href="{$ROOT}/public/styles/buttons.css" rel="stylesheet">
-<script src="{$ROOT}/public/scripts/redirect.js"></script>
-
-<script src="{$ROOT}/public/scripts/login.js"></script>
-<link href="{$ROOT}/public/styles/tools.css" rel="stylesheet">
-<link href="{$ROOT}/public/styles/detail.css" rel="stylesheet">
 <link href="{$ROOT}/public/styles/footer.css" rel="stylesheet">
 <script src="{$ROOT}/public/scripts/scrollBack.js"></script>
+<link href="{$ROOT}/public/styles/detail.css" rel="stylesheet">
+<link href="{$ROOT}/public/styles/footer.css" rel="stylesheet">
+
 </head>
 <body>
 {include file="home/common.html"}
@@ -48,11 +46,11 @@
 				<dl>
 				{if $oneArticle}
 				<dt class="title">{$oneArticle->title}</dt>
-					<dd class="subtitle">{$oneArticle->date}  {$oneArticle->source}  <a href="#">我有话说(2,906人参与)</a> {$oneArticle->pageview}人已读</dd>
+					<dd class="subtitle">{$oneArticle->author}&nbsp;&nbsp;{$oneArticle->date}&nbsp;&nbsp;{$oneArticle->source}&nbsp;&nbsp;{$oneArticle->pageview}人已读&nbsp;&nbsp;<a href="#postAnchor">我有话说(2,906人参与)</a></dd>
 					{if $oneArticle->lead}<dd class="lead">{$oneArticle->lead}</dd>{/if}
 					<dd class="content">{$oneArticle->content}</dd>
 					<!-- <dd class="tag"> 文章关键词：<a href="#">{$oneArticle->tag}</a></dd> -->
-					
+					<a name="postAnchor"></a>
 				{else}
 					<dt class="title">新闻标题</dt>
 					<dd class="subtitle">2014年10月09日02:39  新京报 我有话说(2,906人参与) 80人已读</dd>
@@ -91,11 +89,7 @@
 		</div>
 	</div>
 </div>
-<ul id="indicator">
-	<li><span>首页</span><i class="fa fa-home"></i></li>
-	<li style="border-bottom:1"><span><a data-toggle="modal" data-target="#reportModal">反馈</a></span><i class="fa fa-comment"></i></li>
-	<li style="border-bottom:0" id="up"><span>回到顶部</span><i class="fa fa-chevron-up"></i></li>
-</ul>
 <script src="{$ROOT}/public/scripts/comment.js"></script>
+{include file="home/footer.html"}
 </body>
 </html>

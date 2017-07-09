@@ -30,6 +30,8 @@ class mall extends Controller{
                 'attr'=>implode(",", $_POST['attr']),
                 'state'=>1,
                 'description'=>$_POST['description'],
+                'specialService'=>$_POST['specialService'],
+                'bookreview'=>$_POST['bookreview'],
                 'addTime'=>date('Y-m-d H:i:s')
             );
             if($this->model->add('product',$array)){
@@ -125,6 +127,8 @@ class mall extends Controller{
                 'author'=>$_POST['author'],
                 'inventory'=>$_POST['inventory'],
                 'description'=>$_POST['description'],
+                'specialService'=>$_POST['specialService'],
+                'bookreview'=>$_POST['bookreview'],
                 'attr'=>$arrstr,
                 'pix'=>$file
             );
@@ -198,6 +202,8 @@ class mall extends Controller{
         $this->view("home/cart.html");
     }
     public function productDetail($data=array()){
+        $recommend=$this->model->getAll("product","where attr like '%1%' and state=1 order by id desc limit 6");
+        $this->assign("recommend",$recommend);
         $this->assign("productRecommend",$this->model->getAll("product","where attr like '%1%' and state=1 order by id desc limit 6"));
         $this->showNav();
         if(isset($data['id'])){

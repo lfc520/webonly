@@ -42,7 +42,7 @@
 		<li>{$oneAsk->content}</li>
 	</ul>
 	<dl>
-		<dt></dt><a href="/ask/respond/id/{$oneAsk->id}" class="askBtn" target="_blank">我来回复</a>
+		<dt></dt><a href="/ask/respond/id/{$oneAsk->id}" class="askBtn" target="_blank">我来回复主题</a>
 		<dd style="text-align:left;"></dd>
 		{if $responds}
 		{foreach $responds as $key=>$value}
@@ -55,9 +55,31 @@
 			<td colspan='2'>{$value->content}</td>
 		</tr>
 		<tr>
-			<td colspan='2'>{$value->date}</td>
+			<td colspan='2'>{$value->date}
+			<a href="/ask/respond/id/{$value->id}" class="text-danger askBtn pull-right" target="_blank">我来回复{$value->uid}</a>
+			</td>
 		</tr>
 		</table>
+			{if $value->subResponds}
+			<ul style="list-style:none;border:1px solid orange;margin-left:20px;padding:5px;">
+		{foreach $value->subResponds as $k=>$v}
+			<li><table class="table table-bordered table-striped table-hover">
+		<tr>
+			<td width=35><img class="img-circle" id="defaultUser" src="{$ROOT}public/uploads/user/{$v->icon}"></td>
+			<td>{$v->uid}</td>
+		</tr>
+		<tr>
+			<td colspan='2'>{$v->content}</td>
+		</tr>
+		<tr>
+			<td colspan='2'>{$v->date}
+			</td>
+		</tr>
+		</table></li>
+		{/foreach}
+		</ul>
+		{else}
+		{/if}
 		{/foreach}
 		{else}
 		<dd>暂无回复</dd>
@@ -119,9 +141,27 @@
 {if $showTopic}
 <div class="row">
 	<div class="col-md-8">
+	<!-- <form action='' method="post">
+					<table>
+					<input type="hidden" name='uid' id="uid">
+					<input type="hidden" name="id" value={$id}>
+					<input type="hidden" name="cid" value={$cid}>
+						<tr>
+							<td>
+							<span class="h3 text-primary">{$oneTopic->topic}</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+							<script id="respond" name="respond" style="width:100%"></script>	
+							</td>
+						</tr>
+						<tr><td><input type="submit" value="提交" name="send" class="btn btn-success" id="respondBtn"></td></tr>
+					</table>	
+					</form> -->	
 		<form action='/ask/addTopic' method="post">
-		<input type="hidden" name="uid" id="uid">
 			<table>
+			<input type="hidden" name="uid" id="uid">
 				<tr>
 					<td colspan="2" class="text-center">
 						<select name="cid" class="input-sm" id="cid">
@@ -134,7 +174,8 @@
 				<td><input type="text" class="form-control" name="topic" id="topic"></td>
 				<tr>
 					<td colspan="2">	
-						<script id="commentEditor" name="content" style="width:100%"></script>						 					
+					<script id="respond" name="content" style="width:100%"></script>	
+						<!-- <script id="commentEditor" name="content" style="width:100%"></script> -->						 					
 					</td>
 				</tr>
 				<tr><td><input type="submit" value="提交" name="send" class="btn btn-success" id="submitBtn"></td></tr>
@@ -170,8 +211,8 @@
 <div class="row">
 	<div class="col-md-8">
 			<div class="answer">
+			<form action='' method="post">
 					<table>
-					<form action='' method="post">
 					<input type="hidden" name='uid' id="uid">
 					<input type="hidden" name="id" value={$id}>
 					<input type="hidden" name="cid" value={$cid}>
@@ -182,13 +223,12 @@
 						</tr>
 						<tr>
 							<td>
-							<textarea rows="15" cols="150" name="respond" id="respond" class="form-control"></textarea>	
-							<script src="{$ROOT}/public/scripts/myckeditor.js"></script>
+							<script id="respond" name="respond" style="width:100%"></script>	
 							</td>
 						</tr>
 						<tr><td><input type="submit" value="提交" name="send" class="btn btn-success" id="respondBtn"></td></tr>
-					</form>
-					</table>					
+					</table>	
+					</form>				
 					</div>
 	</div>
 	<div class="col-md-4">
@@ -222,7 +262,7 @@
 <script src="{$ROOT}/vendor/ueditor/ueditor.all.js"></script>
 <script>
 	var ue=UE.getEditor("commentEditor");
-	
+	var ue2=UE.getEditor("respond");
 </script>
 </body>
 </html>

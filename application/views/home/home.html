@@ -78,6 +78,7 @@
 		</div>
 		<div class="col-md-8 hotCourse">
 			{foreach $allCourse as $key=>$value}
+			<div class="regulation" style="display:none">{$value->regulation}</div>
 			<table class="table table-condensed">
 				<tr class="intro">
 					<td style="border:0;">
@@ -112,7 +113,7 @@
 			<table class="table table-bordered table-striped table-hover table-condensed">
 			<tr><td><a href="/mall/productDetail/id/{$value->id}" target="_blank"><img src="{$ROOT}/public/uploads/mall/{$value->pix}" title='{$value->name}'></a></td></tr>
 			<tr><th><a href="/mall/productDetail/id/{$value->id}" target="_blank">{$value->name}</a></th></tr>
-			<tr><td class="text-danger">{$value->price}元</td></tr>
+			<tr><td class="text-danger text-center">{$value->price}元&nbsp;&nbsp;&nbsp;作者:{$value->author}</td></tr>
 			</table>
 			<!-- <dl>
 				<dd><a href="?a=cart&action=detail&id={$value->id}" target="_blank"><img src="public/uploads/product/{$value->pix}" title='{$value->name}'></a></dd>

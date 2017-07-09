@@ -27,8 +27,14 @@ class ask extends Controller{
                 $oneUser=$this->model->getOne("user","where id=".$value->uid);
                 $value->uid=$oneUser[0]->username;
                 $value->icon=$oneUser[0]->icon;
+                $value->subResponds=$this->model->getAll("ask","where pid=".$value->id." order by id desc","limit 0,10");
+                foreach ($value->subResponds as $k=>$v){
+                    $oneUser=$this->model->getOne("user","where id=".$v->uid);
+                    $v->uid=$oneUser[0]->username;
+                    $v->icon=$oneUser[0]->icon;
+                }
             }
-            //$this->dump($responds);
+            //$this->dump($value->subResponds);
             $this->assign("responds",$responds);
             $this->assign("oneAsk",$oneAsk[0]);
         }

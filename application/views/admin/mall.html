@@ -38,7 +38,7 @@
 					<td>显示|隐藏</td>
 					<td>描述</td>
 					<td>操作</td>
-					<td><input type="checkbox" id="selectBar">全选</td>
+					<td><input type="checkbox" id="selectBar"></td>
 				</tr>
 				{if $allProducts}
 				{foreach $allProducts as $key=>$value}
@@ -51,14 +51,13 @@
 					<td>{$value->state}</td>
 					<td>{if $value->description}有描述{else}无描述{/if}</td>
 					<td>
-						<a href="/mall/updateProduct/id/{$value->id}">修改</a>|
-						<a href="/mall/deleteProduct/id/{$value->id}" class="deleteBtn">删除</a>						
+						<a href="/mall/updateProduct/id/{$value->id}">修改</a>					
 					</td>
 					<td><input type="checkbox" value="{$value->id}" name="selectAll[]"></td>
 				</tr>
 				{/foreach}
 				<tr>
-					<td colspan="9"><input type="submit" value="全删" class="btn btn-success pull-right" name="send"></td>
+					<td colspan="9"><input type="submit" value="多删" class="btn btn-success pull-right" name="send"></td>
 				</tr>
 				{else}
 				<tr><td colspan="7">暂无商品</td></tr>
@@ -174,6 +173,18 @@
     </div>
   </div>
   <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">专享服务</label>
+    <div class="col-sm-10">
+    <script name="specialService" id="editor1" type="text/plain" style="width: 100%">{$oneProduct->specialService}</script>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">精彩书评</label>
+    <div class="col-sm-10">
+    <script name="bookreview" id="editor2" type="text/plain" style="width: 100%">{$oneProduct->bookreview}</script>
+    </div>
+  </div>
+  <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <input type="submit" class="btn btn-success" name="send" value="添加">
     </div>
@@ -276,6 +287,18 @@
     <div class="col-sm-10">
     <script name="description" id="editor" type="text/plain"
 							style="width: 100%">{$oneProduct->description}</script>
+    </div>
+  </div>
+    <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">专享服务</label>
+    <div class="col-sm-10">
+    <script name="specialService" id="editor1" type="text/plain" style="width: 100%">{$oneProduct->specialService}</script>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">精彩书评</label>
+    <div class="col-sm-10">
+    <script name="bookreview" id="editor2" type="text/plain" style="width: 100%">{$oneProduct->bookreview}</script>
     </div>
   </div>
   <div class="form-group">
@@ -420,6 +443,8 @@
 <script src="{$ROOT}/vendor/ueditor/ueditor.all.js"></script>
 <script>
 	var ue = UE.getEditor("editor");
+	var ue1 = UE.getEditor("editor1");
+	var ue2 = UE.getEditor("editor2");
 </script>
 </body>
 </html>

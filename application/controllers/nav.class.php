@@ -62,6 +62,54 @@ class nav extends Controller{
         $this->assign("showSubNav",true);
         $this->view("admin/nav.html");
     }
+    /**
+     * 前台显示子导航
+     * */
+    public function subnav($data=array()){
+        if($data['id']&& !empty($data['id'])){
+            $oneNav=$this->model->getOne("nav","where id=".$data['id']);
+            $this->assign("oneNav",$oneNav[0]);
+            $allSubNav=$this->model->getAll("nav","where pid=".$data['id']);
+            //$arr=array();
+            foreach ($allSubNav as $value){
+                $allArticle=$this->model->getAll("article","where nid=".$value->id." order by id desc limit 0,9");
+                $temp=array();
+                foreach ($allArticle as $k=>$v){
+                    $temp[$k]=$v;
+                }
+                $value->allArticle=$temp;
+            }
+            //$this->dump($allSubNav);
+            $this->assign("allSubNav",$allSubNav);
+            //$this->smarty->assign("articles",$arr);
+        }
+        $this->view("home/subnav.html");
+    }
+    public function addSubNav($data=array()){
+        if(isset($data['id'])){
+            $oneNav=$this->model->getOne("nav","where id=".$data['id']);
+            $this->assign("oneNav",$oneNav[0]);
+        }
+        if(isset($_POST['send'])){
+            $array=array(
+                'name'=>$_POST['name'],
+                'description'=>$_POST['description'],
+                'state'=>1,
+                'pid'=>$data['id'],
+                'sort'=>$this->model->nextID("nav"),
+                'date'=>date('Y-m-d H:i:s'),
+                'picked'=>1
+            );
+            if($this->model->add('nav',$array)){
+                $this->redirect("添加成功", "/nav/showSubNav/id/".$data['id']);
+                //Tools::Redirect("添加成功", "?a=nav&action=showSubNav&id=".$_GET['id']);
+            }else{
+                //Tools::getBack("添加失败");
+            }
+        }
+        $this->assign("addSubNav",true);
+        $this->view("admin/nav.html");
+    }
     public function update($data=array()){
         if(isset($_POST['send'])){
             $oneNav=$this->model->getOne("nav", "where id=".$data['id']);

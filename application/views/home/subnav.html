@@ -4,19 +4,29 @@
 <meta charset="UTF-8">
 <title>{$oneNav->name}</title>
 <meta name="keywords" content="{$smarty.const.KEY_WORDS}">
-<meta name="description" content="{$smarty.const.DESCRIPTION}">
-<link href="public/styles/bootstrap.css" rel="stylesheet">
-<link href="public/styles/header.css" rel="stylesheet">
-<link href="public/styles/font-awesome.css" rel="stylesheet">
-<script src="public/scripts/jquery-1.10.2.js"></script>
-<script src="public/scripts/bootstrap.js"></script>
-<script src="public/scripts/home.js"></script>
-<link href="public/styles/home.css" rel="stylesheet">
+<link href="{$ROOT}/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="{$ROOT}/vendor/bootstrap/css/bootstrap-theme.css" rel="stylesheet">
+<script src="{$ROOT}/vendor/jquery/jquery-3.1.1.js"></script>
+<script src="{$ROOT}/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="{$ROOT}/vendor/ckeditor/ckeditor.js"></script>
+<script src="{$ROOT}/public/scripts/login.js"></script>
+<script src="{$ROOT}/public/scripts/home.js"></script>
+<script src="{$ROOT}/public/scripts/frontnav.js"></script>
+<link href="{$ROOT}/public/styles/footer.css" rel="stylesheet">
+<link href="{$ROOT}/public/styles/member.css" rel="stylesheet">
+<link href="{$ROOT}/public/styles/common.css" rel="stylesheet">
+<link href="{$ROOT}/public/styles/header.css" rel="stylesheet">
+<script src="{$ROOT}/public/scripts/redirect.js"></script>
+<script src="{$ROOT}/public/scripts/login.js"></script>
+<link href="{$ROOT}/public/styles/subnav.css" rel="stylesheet">
+<link href="{$ROOT}/public/styles/page.css" rel="stylesheet">
+<script src="{$ROOT}/public/scripts/subnav.js"></script>
 </head>
-<body id="home">
+<body>
+{include file="home/common.html"}
 {include file="home/header.html"}
-<div class="container subnav">
-	<div class="row">
+<div class="container">
+	<div class="row  subnav">
 		<div class="col-md-12" style="padding:0;">
 		<ul class="breadcrumb" style="background:url(public/images/topbar_bg.gif)">
 			<li><a href='index.php'>首页</a></li>
@@ -25,54 +35,35 @@
 		</div>
 	</div>
 	<div class="row up">
-		<div class="col-md-8 headline">
-			<dl>
-				{if $headline}
-				<dd><a href="?a=detail&action=detail&id={$headline->id}" target="_blank"><img src="public/uploads/article/{$headline->thumbnail}"></a></dd>
-				<dd><h2><a href="?a=detail&action=detail&id={$headline->id}" target="_blank">{$headline->title|truncate:20:"..."}</a></h2><span><a href="#"><i class="fa fa-share-alt"></i></a><br><a href="#"><i class="fa fa-comment-o"></i></a></span></dd>
-				{else}
-				<dd><img src="public/images/headline.jpg"></dd>
-				<dd><h2><a href="#">新闻标题</a></h2></dd>
-				{/if}
-			</dl>
+		<div class="col-md-2">
+			left
 		</div>
-		<div class="col-md-4 demo">
-			<img src="public/images/sidebarDemo.jpg">
+		<div class="col-md-8 navtab">
+			<ul>
+			{if $allSubNav}
+				{foreach $allSubNav as $key=>$value}
+				<li>{$value->name}
+				<dl>
+					{foreach $value->allArticle as $k=>$v}
+					<dd>
+					<a href="/article/detail/id/{$v->id}" target="_blank">
+					{$v->title}
+					</a>
+					</dd>
+					{/foreach}
+				</dl>
+				</li>
+				{/foreach}
+			{else}
+				<li>暂无子导航</li>
+			{/if}
+			</ul>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-8 middle">
-		{if $articles}
-		{foreach $articles as $kk=>$vv}
-		<a href="?a=subnavdetail&action=show&name={$kk}&father={$oneNav->name}&fid={$oneNav->id}" class="btn btn-block" style="background:url(public/images/topbar_bg.gif)">{$kk}<i class="fa fa-angle-double-right"></i></a>
-		{foreach $vv as $key=>$value}
-		{if $value}
-		{foreach $value as $v}
-		<table border="0" cellspacing="0" cellpadding="0">
-				<tr><td rowspan="2" style="width:120px;" ><a href="?a=detail&action=detail&id={$v->id}" target="_blank"><img src="public/uploads/article/{$v->thumbnail}"></a></td><td class="newstitle"><a href="?a=detail&action=detail&id={$v->id}" target="_blank">{$v->title|truncate:20:"..."}</a></td></tr>
-				<tr><td colspan="2" class="newscontent">{$v->lead|truncate:120:"..."}</td></tr>
-		</table>
-		{/foreach}
-		{else}
-		<table border="0" cellspacing="0" cellpadding="0">
-			<tr style="height:33px;"><td rowspan="2" style="width:120px;"><img src="public/images/default.jpg"></td><td><h2><a href="#">示例文章</a></h2></td><td style="width:70px;">22</td></tr>
-			<tr><td colspan="2">文章简介文章简介文章简介文章简介</td></tr>
-		</table>
-		{/if}
-		{/foreach}
-		{/foreach}
-		{else}
-		<table border="0" cellspacing="0" cellpadding="0">
-			<tr style="height:33px;"><td rowspan="2" style="width:120px;"><img src="public/images/default.jpg"></td><td><h2><a href="#">示例文章</a></h2></td><td style="width:70px;">22</td></tr>
-			<tr><td colspan="2">文章简介文章简介文章简介文章简介</td></tr>
-		</table>
-		{/if}
-		</div>
-		<div class="col-md-4 demo2">
-			<img src="public/images/demo2.jpg">
+		<div class="col-md-2">
+			right
 		</div>
 	</div>
-	{include file="home/footer.html"}
 </div>
+{include file="home/footer.html"}
 </body>
 </html>

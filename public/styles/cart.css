@@ -1,14 +1,141 @@
 @CHARSET "UTF-8";
-.productHeader dl{
+.productUp{
+	background:#fff;
+	margin-top:5px;
+	padding:5px;
+	padding-top:10px;
+	border:1px solid #ddd;
+	border-bottom:0;
+}
+.productUp dl{
 	padding-top:10px;
 }
-.productHeader dd{
+.productUp dd{
 	margin-top:10px;
 }
-.productHeader input[type=text]{
+.productUp input[type=text]{
 	border:0;
 }
 .glyphicon-chevron-up,.glyphicon-chevron-down{
 	padding-left:10px;
 	padding-right:25px;
 }
+.productImg{
+	text-align:center;
+}
+.productImg img{
+	width:144px;
+	heihgt:144px;
+}
+.productMid{
+	background:#fff;
+	border:1px solid #ddd;
+}
+.productMid_list{
+	list-style:none;
+	margin:0;
+	padding:0;
+	background:#f6f6f6;
+}
+.productMid_list:after{
+	content:"";
+	display:block;
+	clear:both;
+}
+.productMid_list li{
+	float:left;
+	width:25%;
+	height:45px;
+	line-height:45px;
+	text-align:center;
+	border-left:1px solid #ddd;
+	cursor:pointer;
+}
+.productMid_list li.active{
+	background:#fff;
+	border-top:2px solid red;
+}
+.tab div{
+	display:none;
+}
+.tab div.spotlight{
+	display:block;
+}
+
+.comment dl{
+	padding:0;
+}
+.comment dl dd{
+	padding:5px 10px;
+}
+.postComment:after{
+	content:"";
+	display:block;
+	clear:both;
+}
+.postComment textarea{
+	height:85px;
+}
+#commentBtn{
+	margin-top:5px;
+}
+#showComment{
+	background:none;
+	border-bottom:1px solid #eee;
+}
+#showComment table{
+	margin-top:5px;
+	border-bottom:1px dashed #ddd;
+}
+#showComment .icon{
+	width:50px;
+	height:50px;
+	text-align:center;
+	line-height:50px;
+}
+#showComment .icon img{
+	width:50px;
+	height:50px;
+}
+#showComment table:hover{
+	background:#ddd;
+}
+#showComment table{
+	
+}
+#showComment table tr,#showComment table td{
+	
+}
+#showComment .comment_icon{
+	width:48px;
+	height:48px;
+}
+.shopinfo{
+	border:1px solid yellow;
+	text-align:center;
+	padding-bottom:5px;
+}
+.shopinfo_header img,.shopinfo_body img,.asideLeft img{
+	width:100%;
+	height:100%;
+}
+.asideLeft{
+	padding:0;
+}
+.asideLeft .table{
+	width:80%;
+	margin:auto;
+	margin-top:5px;
+}
+.recommend{
+	height:45px;
+	background:#f6f6f6;
+	text-align:center;
+	line-height:45px;
+}
+
+
+
+
+
+

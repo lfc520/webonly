@@ -88,11 +88,12 @@ class article extends Controller{
         $this->view("home/detail.html");
     }
     private function nav($nid=0){
-        $allMainNav=$this->model->getAll("nav","where pid=0 and state=1");
+        $allMainNav=$this->model->getAll("nav","where pid=0");
+        //$this->dump($allMainNav);
         $str=null;
         foreach ($allMainNav as $key=>$value){
             $str.="<optgroup label='".$value->name."'>";
-            $subNav=$this->model->getAll("nav",'where id='.$value->id);
+            $subNav=$this->model->getAll("nav",'where pid='.$value->id);
             //$this->dump($subNav);
             foreach ($subNav as $k=>$v){  
                 //echo $v->id."::::".$nid."<br>";

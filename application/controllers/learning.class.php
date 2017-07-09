@@ -16,6 +16,13 @@ class learning extends Controller{
         $this->assign("judges",$judges);
         $this->view("home/quiz.html");
     }
+    public function deleteAllCourse(){
+        if(isset($_POST['send'])){
+            $this->multiDelete("course");
+        }
+        $this->assign("showCourse",true);
+        $this->view("admin/learning.html");
+    }
     public function deleteChoice($data=array()){
         $result=$this->model->delete("choice","where id=".$data['id']);
         if($result){
@@ -517,6 +524,7 @@ class learning extends Controller{
             $array=array(
                 'name'=>$_POST["name"],
                 'description'=>$_POST["description"],
+                'regulation'=>$_POST["regulation"],
                 'thumbnail'=>$file,
                 'totalTime'=>$_POST['totalTime']
             );
@@ -562,8 +570,10 @@ class learning extends Controller{
                 'thumbnail'=>$file,
                 'state'=>0,
                 'date'=>date('Y-m-d H:i:s'),
+                'regulation'=>$_POST['regulation'],
                 'totalTime'=>$_POST['totalTime']
             );
+            //$this->dump($array);
             if($this->model->add("course",$array)){
                 $this->redirect("课程添加成功",$_SERVER['HTTP_REFERER']);
             }else{

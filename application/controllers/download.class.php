@@ -55,7 +55,7 @@ class download extends Controller{
             );
             if($this->model->update("download", $array,"where id=".$data['id'])){
                 $this->redirect("修改成功","/download/content");
-            }else if($this->model->updateDownload()==0){
+            }else if($this->model->update("download", $array,"where id=".$data['id'])==0){
                 $this->redirect("没有修改","/download/content");
             }else{
                 $this->redirect("修改失败",$_SERVER['HTTP_REFERER'],2);

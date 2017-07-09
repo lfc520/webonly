@@ -115,6 +115,12 @@ $(function(){
 			$(".right div:eq(2) strong").html("密码一致");
 		}
 	});
+	document.querySelector("#confirm_reg_pwd").addEventListener("paste",function(evt){
+		evt.preventDefault();
+		$(".right div:eq(2)").removeClass("alert-warning alert-success").addClass("alert-danger");
+		$(".right div:eq(2) span").removeClass("glyphicon-ok").addClass("glyphicon-remove");
+		$(".right div:eq(2) strong").html("禁止粘贴");
+	});
 	//////////检测邮箱////////////////
 	$("#reg_email").keyup(function(){
 		if(!valid_email($(this).val())){
